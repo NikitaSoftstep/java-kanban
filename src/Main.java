@@ -1,5 +1,10 @@
 import java.util.Scanner;
 
+/* subtask.setEpicID(epicID); - это я сделал, чтобы
+epicID существовал у обновленного объекта, иначе там null
+Перемещать без конфилктов и ошибок классы по папкам у меня не получается. Программа ломается
+ */
+
 public class Main {
     static Scanner scanner = new Scanner(System.in);
     static TaskManager taskManager = new TaskManager();
@@ -110,7 +115,8 @@ public class Main {
                 System.out.println("Выберите тип задач:" +
                         " 1 - простые," +
                         " 2 - эпичные," +
-                        " 3 - подзадача эпика");
+                        " 3 - подзадача эпика, " +
+                        " 4 - все подзадачи");
                 int taskType5 = scanner.nextInt();
                 scanner.nextLine();
                 switch(taskType5) {
@@ -123,13 +129,17 @@ public class Main {
                     case 3:
                         showSubtasks();
                         break;
+                    case 4:
+                        showAllSubtasks();
+                        break;
                 }
                 break;
             case 6:
                 System.out.println("Выберите тип задач:" +
                         " 1 - простые," +
                         " 2 - эпичные," +
-                        " 3 - подзадача эпика");
+                        " 3 - подзадача эпика," +
+                        " 4 - все подзадачи");
                 int taskType6 = scanner.nextInt();
                 scanner.nextLine();
                 switch(taskType6) {
@@ -141,6 +151,9 @@ public class Main {
                         break;
                     case 3:
                         deleteSubtasks();
+                        break;
+                    case 4:
+                        deleteAllSubtasks();
                         break;
                 }
                 break;
@@ -219,7 +232,7 @@ public class Main {
         System.out.println("Введите ID эпической задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        taskManager.deleteEpicTask(taskID);
+        taskManager.deleteEpic(taskID);
     }
 
     public static void deleteSubtask() {
@@ -293,18 +306,22 @@ public class Main {
     }
 
     public static void showSimpleTasks() {
-        System.out.println(taskManager.showSimpleTasks());
+        System.out.println(taskManager.getSimpleTasks());
     }
 
     public static void showEpicTasks() {
-        System.out.println(taskManager.showEpicTasks());
+        System.out.println(taskManager.getEpicTasks());
     }
 
     public static void showSubtasks() {
         System.out.println("Введите ID эпической задачи:");
         int epicID = scanner.nextInt();
         scanner.nextLine();
-        System.out.println(taskManager.showSubtasks(epicID));
+        System.out.println(taskManager.getSubtasks(epicID));
+    }
+
+    public static void showAllSubtasks() {
+        System.out.println(taskManager.getAllSubtasks());
     }
 
     public static void deleteSimpleTasks() {
@@ -319,5 +336,9 @@ public class Main {
         System.out.println("Введите ID эпической задачи для удаления её подзадач:");
         int epicID = scanner.nextInt();
         taskManager.deleteSubtasks(epicID);
+    }
+
+    public static void deleteAllSubtasks() {
+        taskManager.deleteAllSubtasks();
     }
 }
