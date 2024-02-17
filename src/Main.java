@@ -115,8 +115,7 @@ public class Main {
                 System.out.println("Выберите тип задач:" +
                         " 1 - простые," +
                         " 2 - эпичные," +
-                        " 3 - подзадача эпика, " +
-                        " 4 - все подзадачи");
+                        " 3 - подзадачи");
                 int taskType5 = scanner.nextInt();
                 scanner.nextLine();
                 switch(taskType5) {
@@ -129,17 +128,13 @@ public class Main {
                     case 3:
                         showSubtasks();
                         break;
-                    case 4:
-                        showAllSubtasks();
-                        break;
                 }
                 break;
             case 6:
                 System.out.println("Выберите тип задач:" +
                         " 1 - простые," +
                         " 2 - эпичные," +
-                        " 3 - подзадача эпика," +
-                        " 4 - все подзадачи");
+                        " 3 - подзадачи");
                 int taskType6 = scanner.nextInt();
                 scanner.nextLine();
                 switch(taskType6) {
@@ -151,9 +146,6 @@ public class Main {
                         break;
                     case 3:
                         deleteSubtasks();
-                        break;
-                    case 4:
-                        deleteAllSubtasks();
                         break;
                 }
                 break;
@@ -314,14 +306,7 @@ public class Main {
     }
 
     public static void showSubtasks() {
-        System.out.println("Введите ID эпической задачи:");
-        int epicID = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println(taskManager.getSubtasks(epicID));
-    }
-
-    public static void showAllSubtasks() {
-        System.out.println(taskManager.getAllSubtasks());
+        System.out.println(taskManager.getSubtasks());
     }
 
     public static void deleteSimpleTasks() {
@@ -333,12 +318,6 @@ public class Main {
     }
 
     public static void deleteSubtasks() {
-        System.out.println("Введите ID эпической задачи для удаления её подзадач:");
-        int epicID = scanner.nextInt();
-        taskManager.deleteSubtasks(epicID);
-    }
-
-    public static void deleteAllSubtasks() {
-        taskManager.deleteAllSubtasks();
+        taskManager.deleteSubtasks();
     }
 }
