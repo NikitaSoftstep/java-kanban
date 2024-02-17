@@ -1,9 +1,12 @@
+import task_category.TaskCategory;
+import task_manager.TaskManager;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+
 import java.util.Scanner;
 
-/* subtask.setEpicID(epicID); - это я сделал, чтобы
-epicID существовал у обновленного объекта, иначе там null
-Перемещать без конфилктов и ошибок классы по папкам у меня не получается. Программа ломается
- */
+
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);

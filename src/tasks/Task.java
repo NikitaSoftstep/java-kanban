@@ -1,3 +1,7 @@
+package tasks;
+
+import task_category.TaskCategory;
+
 public class Task {
     private String title;
     private String description;
@@ -27,7 +31,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "tasks.Task{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", taskID=" + taskID +
