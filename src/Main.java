@@ -1,8 +1,8 @@
-import task_category.TaskCategory;
-import task_manager.TaskManager;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
+import category.TaskCategory;
+import taskmanager.TaskManager;
+import task.Epic;
+import task.Subtask;
+import task.Task;
 
 import java.util.Scanner;
 

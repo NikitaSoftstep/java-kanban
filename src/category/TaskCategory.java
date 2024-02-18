@@ -1,4 +1,4 @@
-package task_category;
+package category;
 
 public enum TaskCategory {
     NEW,

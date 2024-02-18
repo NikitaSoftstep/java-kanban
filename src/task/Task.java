@@ -1,6 +1,6 @@
-package tasks;
+package task;
 
-import task_category.TaskCategory;
+import category.TaskCategory;
 
 public class Task {
     private String title;

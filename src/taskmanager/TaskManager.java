@@ -1,9 +1,9 @@
-package task_manager;
+package taskmanager;
 
-import task_category.TaskCategory;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
+import category.TaskCategory;
+import task.Epic;
+import task.Subtask;
+import task.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
