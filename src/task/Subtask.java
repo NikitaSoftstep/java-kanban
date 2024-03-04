@@ -15,4 +15,12 @@ public class Subtask extends Task {
     public void setEpicID(int epicID) {
         this.epicID = epicID;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Subtask task = (Subtask) o;
+        return this.getTaskID() == task.getTaskID();
+    }
 }

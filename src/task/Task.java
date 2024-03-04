@@ -2,6 +2,8 @@ package task;
 
 import category.TaskCategory;
 
+import java.util.Objects;
+
 public class Task {
     private String title;
     private String description;
@@ -29,6 +31,14 @@ public class Task {
         this.category = category;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public String toString() {
         return "tasks.Task{" +
@@ -38,4 +48,14 @@ public class Task {
                 ", category=" + category +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return this.getTaskID() == task.getTaskID();
+    }
+
+
 }

@@ -1,84 +1,89 @@
 package taskmanager;
 
+import category.TaskCategory;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import task.Epic;
+import task.Subtask;
+import task.Task;
 
 class InMemoryTaskManagerTest {
 
-    @Test
-    void addSimpleTask() {
+    static private InMemoryTaskManager taskManager;
+    @BeforeEach
+    public void beforeEach() {
+        taskManager = new InMemoryTaskManager();
     }
 
     @Test
-    void addEpicTask() {
+    public void checkIfSimpleTaskAddedAndRetrieved() {
+        Task tsk = new Task("заголовок", "описание");
+        taskManager.addSimpleTask(tsk);
+        int tskID = tsk.getTaskID();
+        Assertions.assertEquals(1, taskManager.getSimpleTasks().size());
+        Assertions.assertEquals(tsk, taskManager.getSimpleTask(tskID));
     }
 
     @Test
-    void addSubtask() {
+    public void checkIfEpicAddedAndRetrieved() {
+        Epic tsk = new Epic("заголовок", "описание");
+        taskManager.addEpicTask(tsk);
+        int tskID = tsk.getTaskID();
+        Assertions.assertEquals(1, taskManager.getEpicTasks().size());
+        Assertions.assertEquals(tsk, taskManager.getEpicTask(tskID));
     }
 
     @Test
-    void getSimpleTask() {
+    public void checkIfSubtaskAddedAndRetrieved() {
+        Epic epic = new Epic("title", "description");
+        epic.setCategory(TaskCategory.NEW);
+        taskManager.addEpicTask(epic);
+        int epicID = epic.getTaskID();
+        Subtask tsk = new Subtask("заголовок", "описание");
+        tsk.setCategory(TaskCategory.NEW);
+        tsk.setEpicID(epicID);
+        taskManager.addSubtask(tsk);
+        int tskID = tsk.getTaskID();
+        Assertions.assertEquals(1, taskManager.getSubtasks().size());
+        Assertions.assertEquals(tsk, taskManager.getSubtask(tskID));
     }
 
     @Test
-    void getEpicTask() {
+    public void checkIfSetIDnotConflictedWithGenID() {
+        // тест не имеет смысла, поскольку все заданные заранее ID
+        // переопределяются в методах addSimpleTask/Epic/Subtask
     }
 
     @Test
-    void getSubtask() {
+    public void checkEqualityBeforeAndAfterAddingTask() {
+        Task task = new Task("заголовок", "описание");
+        task.setCategory(TaskCategory.NEW);
+        taskManager.addSimpleTask(task);
+        Assertions.assertEquals("заголовок", task.getTitle());
+        Assertions.assertEquals("описание", task.getDescription());
+        Assertions.assertEquals(TaskCategory.NEW, task.getCategory());
     }
 
     @Test
-    void deleteSimpleTask() {
+    public void checkEqualityBeforeAndAfterAddingEpic() {
+        Epic task = new Epic("заголовок", "описание");
+        task.setCategory(TaskCategory.NEW);
+        taskManager.addEpicTask(task);
+        Assertions.assertEquals("заголовок", task.getTitle());
+        Assertions.assertEquals("описание", task.getDescription());
+        Assertions.assertEquals(TaskCategory.NEW, task.getCategory());
     }
 
     @Test
-    void deleteEpic() {
+    public void checkEqualityBeforeAndAfterAddingSubtask() {
+        Subtask task = new Subtask("заголовок", "описание");
+        task.setCategory(TaskCategory.NEW);
+        taskManager.addSubtask(task);
+        Assertions.assertEquals("заголовок", task.getTitle());
+        Assertions.assertEquals("описание", task.getDescription());
+        Assertions.assertEquals(TaskCategory.NEW, task.getCategory());
     }
 
-    @Test
-    void deleteSubtask() {
-    }
 
-    @Test
-    void updateSimpleTask() {
-    }
-
-    @Test
-    void updateEpicTask() {
-    }
-
-    @Test
-    void updateSubtask() {
-    }
-
-    @Test
-    void getSimpleTasks() {
-    }
-
-    @Test
-    void getEpicTasks() {
-    }
-
-    @Test
-    void getSubtasks() {
-    }
-
-    @Test
-    void deleteSimpleTasks() {
-    }
-
-    @Test
-    void deleteEpicTasks() {
-    }
-
-    @Test
-    void deleteSubtasks() {
-    }
-
-    @Test
-    void getHistory() {
-    }
 }

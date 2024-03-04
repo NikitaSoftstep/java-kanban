@@ -27,14 +27,14 @@ public class InMemoryTaskManager implements TaskManager {
         int newID = increaseCounter();
         task.setTaskID(newID);
         tasks.put(newID, task);
-        }
+    }
 
     @Override
     public void addEpicTask(Epic epic) {
         int newID = increaseCounter();
         epic.setTaskID(newID);
         epics.put(newID, epic);
-        }
+    }
 
     @Override
     public void addSubtask(Subtask subtask) {
@@ -46,7 +46,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.addSubtaskID(newID);
             int epicID = subtask.getEpicID();
             correctEpicCategory(epicID);
-            }
+        }
     }
 
     @Override
@@ -179,6 +179,8 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getHistory() {
         return inMemoryManager.getHistory();
     }
+
+
 
 
 

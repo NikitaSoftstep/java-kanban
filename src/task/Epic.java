@@ -16,4 +16,12 @@ public class Epic extends Task {
     public ArrayList<Integer> getSubtaskIDs() {
         return subtaskIDs;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Epic task = (Epic) o;
+        return this.getTaskID() == task.getTaskID();
+    }
 }
