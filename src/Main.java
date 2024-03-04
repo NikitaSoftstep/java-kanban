@@ -1,16 +1,21 @@
 import category.TaskCategory;
-import taskmanager.TaskManager;
+import taskmanager.InMemoryHistoryManager;
+import taskmanager.InMemoryTaskManager;
 import task.Epic;
 import task.Subtask;
 import task.Task;
+import taskmanager.Managers;
+import taskmanager.TaskManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
-    static TaskManager taskManager = new TaskManager();
+    static InMemoryTaskManager inMemoryTaskManager = Managers.getDefaultTask();
     public static void main(String[] args) {
 
         startApp();
@@ -32,7 +37,9 @@ public class Main {
         System.out.println("4 - обновление задачи по ID:");
         System.out.println("5 - показать все задачи:");
         System.out.println("6 - удалить все задачи:");
-        System.out.println("7 - выход из программы:");
+        System.out.println("7 - показать последние " + InMemoryHistoryManager.maxHistorySize
+                + " вызовов задач");
+        System.out.println("8 - выход из программы:");
     }
 
     public static void chooseAction(int action) {
@@ -153,6 +160,9 @@ public class Main {
                 }
                 break;
             case 7:
+                showHistory();
+                break;
+            case 8:
                 System.exit(0);
         }
 
@@ -165,7 +175,7 @@ public class Main {
         String description = scanner.nextLine();
         Task task = new Task(title, description);
         task.setCategory(TaskCategory.NEW);
-        taskManager.addSimpleTask(task);
+        inMemoryTaskManager.addSimpleTask(task);
     }
 
     public static void createEpicTask() {
@@ -175,7 +185,7 @@ public class Main {
         String description = scanner.nextLine();
         Epic epic = new Epic(title, description);
         epic.setCategory(TaskCategory.NEW);
-        taskManager.addEpicTask(epic);
+        inMemoryTaskManager.addEpicTask(epic);
     }
 
     public static void createSubtask() {
@@ -189,14 +199,14 @@ public class Main {
         Subtask subtask = new Subtask(title, description);
         subtask.setEpicID(epicID);
         subtask.setCategory(TaskCategory.NEW);
-        taskManager.addSubtask(subtask);
+        inMemoryTaskManager.addSubtask(subtask);
     }
 
     public static void getSimpleTask() {
         System.out.println("Введите ID задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        Task task = taskManager.getSimpleTask(taskID);
+        Task task = inMemoryTaskManager.getSimpleTask(taskID);
         System.out.println(task);
     }
 
@@ -204,7 +214,7 @@ public class Main {
         System.out.println("Введите ID эпической задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        Epic epic = taskManager.getEpicTask(taskID);
+        Epic epic = inMemoryTaskManager.getEpicTask(taskID);
         System.out.println(epic);
     }
 
@@ -212,7 +222,7 @@ public class Main {
         System.out.println("Введите ID подзадачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        Subtask subtask = taskManager.getSubtask(taskID);
+        Subtask subtask = inMemoryTaskManager.getSubtask(taskID);
         System.out.println(subtask);
     }
 
@@ -220,21 +230,21 @@ public class Main {
         System.out.println("Введите ID задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        taskManager.deleteSimpleTask(taskID);
+        inMemoryTaskManager.deleteSimpleTask(taskID);
     }
 
     public static void deleteEpicTask() {
         System.out.println("Введите ID эпической задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        taskManager.deleteEpic(taskID);
+        inMemoryTaskManager.deleteEpic(taskID);
     }
 
     public static void deleteSubtask() {
         System.out.println("Введите ID эпической задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        taskManager.deleteSubtask(taskID);
+        inMemoryTaskManager.deleteSubtask(taskID);
     }
 
     public static void updateSimpleTask() {
@@ -259,7 +269,7 @@ public class Main {
                 task.setCategory(category);
                 break;
         }
-        taskManager.updateSimpleTask(task);
+        inMemoryTaskManager.updateSimpleTask(task);
     }
 
     public static void updateEpicTask() {
@@ -272,7 +282,7 @@ public class Main {
         String description = scanner.nextLine();
         Epic epic = new Epic(title, description);
         epic.setTaskID(taskID);
-        taskManager.updateEpicTask(epic);
+        inMemoryTaskManager.updateEpicTask(epic);
     }
 
     public static void updateSubtask() {
@@ -297,30 +307,35 @@ public class Main {
                 subtask.setCategory(category);
                 break;
         }
-        taskManager.updateSubtask(subtask);
+        inMemoryTaskManager.updateSubtask(subtask);
     }
 
     public static void showSimpleTasks() {
-        System.out.println(taskManager.getSimpleTasks());
+        System.out.println(inMemoryTaskManager.getSimpleTasks());
     }
 
     public static void showEpicTasks() {
-        System.out.println(taskManager.getEpicTasks());
+        System.out.println(inMemoryTaskManager.getEpicTasks());
     }
 
     public static void showSubtasks() {
-        System.out.println(taskManager.getSubtasks());
+        System.out.println(inMemoryTaskManager.getSubtasks());
     }
 
     public static void deleteSimpleTasks() {
-        taskManager.deleteSimpleTasks();
+        inMemoryTaskManager.deleteSimpleTasks();
     }
 
     public static void deleteEpicTasks() {
-        taskManager.deleteEpicTasks();
+        inMemoryTaskManager.deleteEpicTasks();
     }
 
     public static void deleteSubtasks() {
-        taskManager.deleteSubtasks();
+        inMemoryTaskManager.deleteSubtasks();
+    }
+
+    public static void showHistory() {
+        List<Task> tasksHistory = inMemoryTaskManager.getHistory();
+        System.out.println(tasksHistory);
     }
 }
