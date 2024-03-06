@@ -1,13 +1,11 @@
 import category.TaskCategory;
 import taskmanager.InMemoryHistoryManager;
-import taskmanager.InMemoryTaskManager;
 import task.Epic;
 import task.Subtask;
 import task.Task;
 import taskmanager.Managers;
 import taskmanager.TaskManager;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,7 +13,7 @@ import java.util.Scanner;
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
-    static InMemoryTaskManager inMemoryTaskManager = Managers.getDefaultTask();
+    static TaskManager inMemoryTaskManager = Managers.getDefaultManager();
     public static void main(String[] args) {
 
         startApp();
@@ -37,133 +35,93 @@ public class Main {
         System.out.println("4 - обновление задачи по ID:");
         System.out.println("5 - показать все задачи:");
         System.out.println("6 - удалить все задачи:");
-        System.out.println("7 - показать последние " + InMemoryHistoryManager.maxHistorySize
+        System.out.println("7 - показать последние " + InMemoryHistoryManager.MAX_HISTORY_SIZE
                 + " вызовов задач");
         System.out.println("8 - выход из программы:");
     }
 
     public static void chooseAction(int action) {
-        switch(action) {
-            case 1:
+        switch (action) {
+            case 1 -> {
                 System.out.println("Выберите тип задачи:" +
                         " 1 - простая," +
                         " 2 - эпичная," +
                         " 3 - подзадача");
                 int taskType1 = scanner.nextInt();
                 scanner.nextLine();
-                switch(taskType1) {
-                    case 1:
-                        createSimpleTask();
-                        break;
-                    case 2:
-                        createEpicTask();
-                        break;
-                    case 3:
-                        createSubtask();
-                        break;
+                switch (taskType1) {
+                    case 1 -> createSimpleTask();
+                    case 2 -> createEpicTask();
+                    case 3 -> createSubtask();
                 }
-                break;
-
-            case 2:
+            }
+            case 2 -> {
                 System.out.println("Выберите тип задачи:" +
                         " 1 - простая," +
                         " 2 - эпичная," +
                         " 3 - подзадача");
                 int taskType2 = scanner.nextInt();
                 scanner.nextLine();
-                switch(taskType2) {
-                    case 1:
-                        getSimpleTask();
-                        break;
-                    case 2:
-                        getEpicTask();
-                        break;
-                    case 3:
-                        getSubtask();
-                        break;
+                switch (taskType2) {
+                    case 1 -> getSimpleTask();
+                    case 2 -> getEpicTask();
+                    case 3 -> getSubtask();
                 }
-                break;
-            case 3:
+            }
+            case 3 -> {
                 System.out.println("Выберите тип задачи:" +
                         " 1 - простая," +
                         " 2 - эпичная," +
                         " 3 - подзадача");
                 int taskType3 = scanner.nextInt();
                 scanner.nextLine();
-                switch(taskType3) {
-                    case 1:
-                        deleteSimpleTask();
-                        break;
-                    case 2:
-                        deleteEpicTask();
-                        break;
-                    case 3:
-                        deleteSubtask();
-                        break;
+                switch (taskType3) {
+                    case 1 -> deleteSimpleTask();
+                    case 2 -> deleteEpicTask();
+                    case 3 -> deleteSubtask();
                 }
-                break;
-            case 4:
+            }
+            case 4 -> {
                 System.out.println("Выберите тип задачи:" +
                         " 1 - простая," +
                         " 2 - эпичная," +
                         " 3 - подзадача");
                 int taskType4 = scanner.nextInt();
                 scanner.nextLine();
-                switch(taskType4) {
-                    case 1:
-                        updateSimpleTask();
-                        break;
-                    case 2:
-                        updateEpicTask();
-                        break;
-                    case 3:
-                        updateSubtask();
-                        break;
+                switch (taskType4) {
+                    case 1 -> updateSimpleTask();
+                    case 2 -> updateEpicTask();
+                    case 3 -> updateSubtask();
                 }
-                break;
-            case 5:
+            }
+            case 5 -> {
                 System.out.println("Выберите тип задач:" +
                         " 1 - простые," +
                         " 2 - эпичные," +
                         " 3 - подзадачи");
                 int taskType5 = scanner.nextInt();
                 scanner.nextLine();
-                switch(taskType5) {
-                    case 1:
-                        showSimpleTasks();
-                        break;
-                    case 2:
-                        showEpicTasks();
-                        break;
-                    case 3:
-                        showSubtasks();
-                        break;
+                switch (taskType5) {
+                    case 1 -> showSimpleTasks();
+                    case 2 -> showEpicTasks();
+                    case 3 -> showSubtasks();
                 }
-                break;
-            case 6:
+            }
+            case 6 -> {
                 System.out.println("Выберите тип задач:" +
                         " 1 - простые," +
                         " 2 - эпичные," +
                         " 3 - подзадачи");
                 int taskType6 = scanner.nextInt();
                 scanner.nextLine();
-                switch(taskType6) {
-                    case 1:
-                        deleteSimpleTasks();
-                        break;
-                    case 2:
-                        deleteEpicTasks();
-                        break;
-                    case 3:
-                        deleteSubtasks();
-                        break;
+                switch (taskType6) {
+                    case 1 -> deleteSimpleTasks();
+                    case 2 -> deleteEpicTasks();
+                    case 3 -> deleteSubtasks();
                 }
-                break;
-            case 7:
-                showHistory();
-                break;
-            case 8:
-                System.exit(0);
+            }
+            case 7 -> showHistory();
+            case 8 -> System.exit(0);
         }
 
     }
@@ -259,15 +217,15 @@ public class Main {
         task.setTaskID(taskID);
         System.out.println("Введите категорию/статус задачи: 1 - in progress, 2 - done");
         TaskCategory category;
-        switch(scanner.nextInt()) {
-            case 1:
+        switch (scanner.nextInt()) {
+            case 1 -> {
                 category = TaskCategory.IN_PROGRESS;
                 task.setCategory(category);
-                break;
-            case 2:
+            }
+            case 2 -> {
                 category = TaskCategory.DONE;
                 task.setCategory(category);
-                break;
+            }
         }
         inMemoryTaskManager.updateSimpleTask(task);
     }
@@ -297,15 +255,15 @@ public class Main {
         subtask.setTaskID(taskID);
         System.out.println("Введите категорию/статус задачи: 1 - in progress, 2 - done");
         TaskCategory category;
-        switch(scanner.nextInt()) {
-            case 1:
+        switch (scanner.nextInt()) {
+            case 1 -> {
                 category = TaskCategory.IN_PROGRESS;
                 subtask.setCategory(category);
-                break;
-            case 2:
+            }
+            case 2 -> {
                 category = TaskCategory.DONE;
                 subtask.setCategory(category);
-                break;
+            }
         }
         inMemoryTaskManager.updateSubtask(subtask);
     }

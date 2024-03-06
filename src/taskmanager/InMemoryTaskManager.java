@@ -5,18 +5,15 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private int counter = 0;
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
-    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, Subtask> subtasks = new HashMap<>();
 
-    private final HistoryManager inMemoryManager = Managers.getDefaultHistory();
+    private final HistoryManager history = Managers.getDefaultHistory();
 
 
     private int increaseCounter() {
@@ -51,19 +48,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getSimpleTask(int taskID) {
-        inMemoryManager.add(tasks.get(taskID));
+        history.add(tasks.get(taskID));
         return tasks.get(taskID);
     }
 
     @Override
     public Epic getEpicTask(int taskID) {
-        inMemoryManager.add(epics.get(taskID));
+        history.add(epics.get(taskID));
         return epics.get(taskID);
     }
 
     @Override
     public Subtask getSubtask(int taskID) {
-        inMemoryManager.add(subtasks.get(taskID));
+        history.add(subtasks.get(taskID));
         return subtasks.get(taskID);
     }
 
@@ -175,9 +172,9 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setCategory(TaskCategory.NEW);
         }
     }
-
+    @Override
     public List<Task> getHistory() {
-        return inMemoryManager.getHistory();
+        return history.getHistory();
     }
 
 

@@ -8,14 +8,6 @@ class ManagersTest {
 
 
     @Test
-    public void returnsReadyTaskManager() {
-        InMemoryTaskManager taskManager = Managers.getDefaultTask();
-        Assertions.assertFalse(null == taskManager, "Объект - null!");
-        Assertions.assertTrue(taskManager instanceof InMemoryTaskManager,
-                "Объект не готов!");
-    }
-
-    @Test
     public void returnsReadyHistoryManager() {
         HistoryManager taskManager1 = Managers.getDefaultHistory();
         Assertions.assertFalse(null == taskManager1, "Объект - null!");
@@ -25,7 +17,7 @@ class ManagersTest {
 
     @Test
     public void returnsReadyDefaultTaskManager() {
-        TaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefaultManager();
         Assertions.assertFalse(null == taskManager, "Объект - null!");
         Assertions.assertTrue(taskManager instanceof TaskManager,
                 "Объект не готов!");
