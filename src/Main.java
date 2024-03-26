@@ -1,5 +1,4 @@
 import category.TaskCategory;
-import taskmanager.InMemoryHistoryManager;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -10,12 +9,11 @@ import java.util.List;
 import java.util.Scanner;
 
 
-
 public class Main {
     static Scanner scanner = new Scanner(System.in);
     static TaskManager inMemoryTaskManager = Managers.getDefaultManager();
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
         startApp();
     }
 
