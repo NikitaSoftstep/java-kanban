@@ -19,8 +19,6 @@ public class InMemoryTaskManager implements TaskManager {
     private int increaseCounter() {
         return ++counter;
     }
-
-
     @Override
     public void addSimpleTask(Task task) {
         int newID = increaseCounter();
