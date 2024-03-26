@@ -20,6 +20,7 @@ public class InMemoryTaskManager implements TaskManager {
         return ++counter;
     }
 
+
     @Override
     public void addSimpleTask(Task task) {
         int newID = increaseCounter();
