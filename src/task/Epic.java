@@ -10,7 +10,7 @@ public class Epic extends Task {
         super(title, description);
     }
 
-    public void addSubtaskID (int subtaskID) {
+    public void addSubtaskID(int subtaskID) {
         subtaskIDs.add(subtaskID);
     }
 
