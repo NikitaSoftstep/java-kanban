@@ -35,8 +35,7 @@ public class Main {
         System.out.println("4 - обновление задачи по ID:");
         System.out.println("5 - показать все задачи:");
         System.out.println("6 - удалить все задачи:");
-        System.out.println("7 - показать последние " + InMemoryHistoryManager.MAX_HISTORY_SIZE
-                + " вызовов задач");
+        System.out.println("7 - показать историю вызовов задач");
         System.out.println("8 - выход из программы:");
     }
 

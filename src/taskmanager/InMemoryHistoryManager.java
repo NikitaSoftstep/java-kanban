@@ -2,27 +2,70 @@ package taskmanager;
 
 import task.Task;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private final List<Task> calledTasks = new LinkedList<>();
-    public static final int MAX_HISTORY_SIZE = 10;
+    private Node head = null;
+    private Node tail = null;
+
+
+
+    private final Map<Integer, Node> idAndTaskNode = new LinkedHashMap<>();
+
     @Override
     public void add(Task task) {
-        if (calledTasks.size() >= MAX_HISTORY_SIZE) {
-            calledTasks.removeFirst();
+        int taskID = task.getTaskID();
+        if (idAndTaskNode.containsKey(taskID)) {
+            remove(taskID);
         }
-        calledTasks.addLast(task);
+        Node newNode = new Node(task);
+
+        if (head == null) {
+            head = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+        }
+        tail = newNode;
+        idAndTaskNode.put(taskID, newNode);
+    }
+
+    @Override
+    public void remove(int taskID) {
+        Node oldNode = idAndTaskNode.get(taskID);
+        if (oldNode == head) {
+            head = head.next;
+        } else if (oldNode == tail) {
+            tail.prev.next = null;
+            tail = tail.prev;
+        } else {
+            oldNode.prev.next = oldNode.next;
+            oldNode.next.prev = oldNode.prev;
+        }
+        idAndTaskNode.remove(taskID);
     }
 
     @Override
     public List<Task> getHistory() {
-        return new LinkedList<>(calledTasks);
+        ArrayList<Task> calledTasks = new ArrayList<>();
+        for (Node node : idAndTaskNode.values()) {
+            calledTasks.add(node.task);
+        }
+        return calledTasks;
     }
 
-    public int getMaxHistorySize() {
-        return MAX_HISTORY_SIZE;
+    private class Node {
+        Task task;
+        Node prev;
+        Node next;
+
+        Node(Task task) {
+            this.task = task;
+            this.prev = null;
+            this.next = null;
+        }
     }
+
+
 }
