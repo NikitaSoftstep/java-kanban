@@ -2,7 +2,6 @@ package task;
 
 import category.TaskCategory;
 
-import java.util.Objects;
 
 public class Task {
     private String title;
