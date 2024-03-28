@@ -55,6 +55,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             return calledTasks;
         }
         Node currentNode = head;
+
         while (currentNode != null) {
             calledTasks.add(currentNode.task);
             currentNode = currentNode.next;
