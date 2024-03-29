@@ -1,5 +1,4 @@
 import category.TaskCategory;
-import taskmanager.InMemoryHistoryManager;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -10,12 +9,11 @@ import java.util.List;
 import java.util.Scanner;
 
 
-
 public class Main {
     static Scanner scanner = new Scanner(System.in);
     static TaskManager inMemoryTaskManager = Managers.getDefaultManager();
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
         startApp();
     }
 
@@ -35,8 +33,7 @@ public class Main {
         System.out.println("4 - обновление задачи по ID:");
         System.out.println("5 - показать все задачи:");
         System.out.println("6 - удалить все задачи:");
-        System.out.println("7 - показать последние " + InMemoryHistoryManager.MAX_HISTORY_SIZE
-                + " вызовов задач");
+        System.out.println("7 - показать историю вызовов задач");
         System.out.println("8 - выход из программы:");
     }
 
