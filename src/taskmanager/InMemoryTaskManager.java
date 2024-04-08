@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int counter = 0;
-    private final Map<Integer, Task> tasks = new HashMap<>();
-    private final Map<Integer, Epic> epics = new HashMap<>();
-    private final Map<Integer, Subtask> subtasks = new HashMap<>();
+    protected int counter = 0;
+    protected final Map<Integer, Task> tasks = new HashMap<>();
+    protected final Map<Integer, Epic> epics = new HashMap<>();
+    protected final Map<Integer, Subtask> subtasks = new HashMap<>();
 
-    private final HistoryManager history = Managers.getDefaultHistory();
+    protected final HistoryManager history = Managers.getDefaultHistory();
 
 
-    private int increaseCounter() {
+    protected int increaseCounter() {
         return ++counter;
     }
 
@@ -128,7 +128,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void correctEpicCategory(int epicID) {
+    protected void correctEpicCategory(int epicID) {
         Epic epic = epics.get(epicID);
         ArrayList<Task> currentTasks = new ArrayList<>(subtasks.values());
         if (currentTasks.stream().allMatch(Objects::isNull) ||

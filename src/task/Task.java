@@ -9,6 +9,8 @@ public class Task {
     private int taskID;
     private TaskCategory category;
 
+    private int epicID = 0;
+
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
@@ -38,14 +40,26 @@ public class Task {
         return description;
     }
 
+    public int getEpicID() {
+        return epicID;
+    }
+
+    public void setEpicID(int epicID) {
+        this.epicID = epicID;
+    }
+
+    public TaskTypes getType() {
+        return TaskTypes.TASK;
+    }
+
     @Override
     public String toString() {
-        return "tasks.Task{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", taskID=" + taskID +
-                ", category=" + category +
-                '}';
+        // id,type,name,status,description,epic
+        return String.format("%s,%s,%s,%s,%s,", taskID,
+                TaskTypes.TASK,
+                title,
+                category,
+                description);
     }
 
     @Override
