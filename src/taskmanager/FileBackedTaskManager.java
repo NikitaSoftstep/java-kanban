@@ -131,14 +131,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     @Override
     public Task getSimpleTask(int taskID) throws IOException {
-        Task task  = super.getSimpleTask(taskID);
+        Task task = super.getSimpleTask(taskID);
         historyToString(history);
         return task;
-   }
+    }
 
     @Override
     public Epic getEpicTask(int taskID) throws IOException {
-        Epic epic =  super.getEpicTask(taskID);
+        Epic epic = super.getEpicTask(taskID);
         historyToString(history);
         return epic;
     }
