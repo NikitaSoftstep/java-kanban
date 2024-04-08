@@ -6,6 +6,9 @@ import taskmanager.FileBackedTaskManager;
 import taskmanager.Managers;
 import taskmanager.TaskManager;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -15,15 +18,15 @@ import java.util.Scanner;
 public class Main {
     static Scanner scanner = new Scanner(System.in);
 
-    static Path savedManager = Paths.get("src/resources/savedManager.csv");
+    static String savedManager = "src/resources/managerData.csv";
 
     static TaskManager fileBackedTaskManager = Managers.getFileBackedTaskManager(savedManager);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         startApp();
     }
 
-    public static void startApp() {
+    public static void startApp() throws IOException {
         while (true) {
             printMenu();
             int action = scanner.nextInt();
@@ -43,7 +46,7 @@ public class Main {
         System.out.println("8 - выход из программы:");
     }
 
-    public static void chooseAction(int action) {
+    public static void chooseAction(int action) throws IOException {
         switch (action) {
             case 1 -> {
                 System.out.println("Выберите тип задачи:" +
@@ -129,7 +132,7 @@ public class Main {
 
     }
 
-    public static void createSimpleTask() {
+    public static void createSimpleTask() throws IOException {
         System.out.println("Введите название задачи:");
         String title = scanner.nextLine();
         System.out.println("Введите описание задачи:");
@@ -139,7 +142,7 @@ public class Main {
         fileBackedTaskManager.addSimpleTask(task);
     }
 
-    public static void createEpicTask() {
+    public static void createEpicTask() throws IOException {
         System.out.println("Введите название эпической задачи:");
         String title = scanner.nextLine();
         System.out.println("Введите описание эпической задачи:");
@@ -149,7 +152,7 @@ public class Main {
         fileBackedTaskManager.addEpicTask(epic);
     }
 
-    public static void createSubtask() {
+    public static void createSubtask() throws IOException {
         System.out.println("Введите ID эпической задачи:");
         int epicID = scanner.nextInt();
         scanner.nextLine();
@@ -163,7 +166,7 @@ public class Main {
         fileBackedTaskManager.addSubtask(subtask);
     }
 
-    public static void getSimpleTask() {
+    public static void getSimpleTask() throws IOException {
         System.out.println("Введите ID задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
@@ -171,7 +174,7 @@ public class Main {
         System.out.println(task);
     }
 
-    public static void getEpicTask() {
+    public static void getEpicTask() throws IOException {
         System.out.println("Введите ID эпической задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
@@ -179,7 +182,7 @@ public class Main {
         System.out.println(epic);
     }
 
-    public static void getSubtask() {
+    public static void getSubtask() throws IOException {
         System.out.println("Введите ID подзадачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
@@ -187,28 +190,28 @@ public class Main {
         System.out.println(subtask);
     }
 
-    public static void deleteSimpleTask() {
+    public static void deleteSimpleTask() throws IOException {
         System.out.println("Введите ID задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
         fileBackedTaskManager.deleteSimpleTask(taskID);
     }
 
-    public static void deleteEpicTask() {
+    public static void deleteEpicTask() throws IOException {
         System.out.println("Введите ID эпической задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
         fileBackedTaskManager.deleteEpic(taskID);
     }
 
-    public static void deleteSubtask() {
+    public static void deleteSubtask() throws IOException {
         System.out.println("Введите ID эпической задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
         fileBackedTaskManager.deleteSubtask(taskID);
     }
 
-    public static void updateSimpleTask() {
+    public static void updateSimpleTask() throws IOException {
         System.out.println("Введите ID задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
@@ -233,7 +236,7 @@ public class Main {
         fileBackedTaskManager.updateSimpleTask(task);
     }
 
-    public static void updateEpicTask() {
+    public static void updateEpicTask() throws IOException {
         System.out.println("Введите ID задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
@@ -246,7 +249,7 @@ public class Main {
         fileBackedTaskManager.updateEpicTask(epic);
     }
 
-    public static void updateSubtask() {
+    public static void updateSubtask() throws IOException {
         System.out.println("Введите ID задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
@@ -283,15 +286,15 @@ public class Main {
         System.out.println(fileBackedTaskManager.getSubtasks());
     }
 
-    public static void deleteSimpleTasks() {
+    public static void deleteSimpleTasks() throws IOException {
         fileBackedTaskManager.deleteSimpleTasks();
     }
 
-    public static void deleteEpicTasks() {
+    public static void deleteEpicTasks() throws IOException {
         fileBackedTaskManager.deleteEpicTasks();
     }
 
-    public static void deleteSubtasks() {
+    public static void deleteSubtasks() throws IOException {
         fileBackedTaskManager.deleteSubtasks();
     }
 

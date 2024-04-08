@@ -1,0 +1,8 @@
+
+
+java:S2095"LUse try-with-resources or close this "BufferedWriter" in a "finally" clause.(ƒªx8‚ˆ«öë1J$65d708c9-b2e5-4dd5-a6c4-ab38e41d959d
+ƒ	java:S125*"<This block of commented-out lines of code should be removed.(ÔÉŒışÿÿÿÿ8¦©‰öë1J$67ae464b-9566-44cd-a1e9-33a12b0e1339
+r
+java:S1128"/Remove this unused import 'java.nio.file.Path'.(×²êÂ8‹ˆ«öë1J$09c6e350-11dc-4340-9c60-453ccafb05da
+s
+java:S1128"0Remove this unused import 'java.nio.file.Paths'.(áè°¯8Œˆ«öë1J$ee8706b6-c4f8-4583-b9d3-6308677a3e3d

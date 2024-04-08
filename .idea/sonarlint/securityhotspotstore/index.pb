@@ -73,3 +73,7 @@ Q.idea/sonarlint/securityhotspotstore/8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a057
 Q.idea/sonarlint/securityhotspotstore/e/3/e3494d67281b8202ee7b786b4b62787e5072ae90,2\3\234053064a65c4145e8960a9a7cce2023e32626a
 w
 G.idea/sonarlint/issuestore/2/e/2e51cff85f3d8e59195801d150297e8c7f076998,b\c\bc76c9167b2ce7136fb63c4374463b9989d544d4
+R
+"src/resources/savedManagerData.csv,7\4\74da3496690d1623744261d72bf6c08e458d4749
+M
+src/resources/managerData.csv,6\1\617b3cdc0c924da61ff80863c514713280d3ef8e

@@ -1,0 +1,4 @@
+id,type,name,status,description,epic
+1,TASK,отец,NEW,и сын,
+2,EPIC,мать,NEW,и дочь,
+3,SUBTASK,кошка,NEW,и собака,2

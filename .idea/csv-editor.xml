@@ -10,7 +10,21 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\src\resources\managerData.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\src\resources\savedManager.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\src\resources\savedManagerData.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

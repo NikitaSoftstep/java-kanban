@@ -11,6 +11,8 @@ public class Task {
 
     private int epicID = 0;
 
+    private TaskTypes taskType = TaskTypes.TASK;
+
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
@@ -36,8 +38,16 @@ public class Task {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getEpicID() {
@@ -49,7 +59,7 @@ public class Task {
     }
 
     public TaskTypes getType() {
-        return TaskTypes.TASK;
+        return taskType;
     }
 
     @Override

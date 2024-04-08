@@ -11,7 +11,7 @@ public class Managers {
         return new InMemoryHistoryManager();
     }
 
-    public static TaskManager getFileBackedTaskManager(Path savedPath) {
+    public static TaskManager getFileBackedTaskManager(String savedPath) {
         return new FileBackedTaskManager(savedPath);
     }
 

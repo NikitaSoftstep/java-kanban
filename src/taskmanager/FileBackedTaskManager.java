@@ -4,136 +4,140 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 
+import java.util.*;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
-    private Path savePath;
-    public FileBackedTaskManager(Path savePath) {
+    private String savePath;
+    public FileBackedTaskManager(String savePath) {
         this.savePath = savePath;
     }
 
-    public void save(Task task) {
+    public void save() throws IOException {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(savePath.toFile(), true))) {
-            String taskData = String.format("%s,%s,%s,%s,%s,%s%n",
-                    task.getTaskID(),
-                    task.getType(),
-                    task.getTitle(),
-                    task.getCategory(),
-                    task.getDescription(),
-                    task.getEpicID());
-            writer.write(taskData);
-        } catch (IOException e) {
-            e.printStackTrace();
+        BufferedWriter br = new BufferedWriter(new FileWriter(savePath));
+        br.write("id,type,name,status,description,epic" + "\n");
+        List<Task> taskList = new ArrayList<>(tasks.values());
+        for (Task task : taskList) {
+            br.write(task.toString() + "\n");
         }
+        List<Epic> epicList = new ArrayList<>(epics.values());
+        for (Epic epic : epicList) {
+            br.write(epic.toString() + "\n");
+        }
+        List<Subtask> subtaskList = new ArrayList<>(subtasks.values());
+        for (Subtask subtask : subtaskList) {
+            br.write(subtask.toString() + "\n");
+        }
+        br.close();
     }
 
+//    public TaskManager loadFromFile() {
+//        // считываем содержимое файла
+//        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(Paths.get("src/resources/savedManager.csv"));
+//        Task task = new Task();
+//
+//        tasks.put(task.getTaskID(), task);
+//        return fileBackedTaskManager;
+//    }
+
     @Override
-    public void addSimpleTask(Task task) {
+    public void addSimpleTask(Task task) throws IOException {
         super.addSimpleTask(task);
-        save(task);
+        save();
     }
 
     @Override
-    public void addEpicTask(Epic epic) {
+    public void addEpicTask(Epic epic) throws IOException {
         super.addEpicTask(epic);
-        save(epic);
+        save();
     }
 
     @Override
-    public void addSubtask(Subtask subtask) {
+    public void addSubtask(Subtask subtask) throws IOException {
         super.addSubtask(subtask);
-        save(subtask);
+        save();
     }
 
     @Override
-    public Task getSimpleTask(int taskID) {
+    public Task getSimpleTask(int taskID) throws IOException {
         Task task  = super.getSimpleTask(taskID);
-        save(task);
+        save();
         return task;
    }
 
     @Override
-    public Epic getEpicTask(int taskID) {
+    public Epic getEpicTask(int taskID) throws IOException {
         Epic epic =  super.getEpicTask(taskID);
-        save(epic);
+        save();
         return epic;
     }
 
     @Override
-    public Subtask getSubtask(int taskID) {
+    public Subtask getSubtask(int taskID) throws IOException {
         Subtask subtask = super.getSubtask(taskID);
-        save(subtask);
+        save();
         return subtask;
     }
 
     @Override
-    public void deleteSimpleTask(int taskID) {
-        Task task = getSimpleTasks().get(taskID);
-        save(task);
+    public void deleteSimpleTask(int taskID) throws IOException {
         super.deleteSimpleTask(taskID);
+        save();
     }
 
     @Override
-    public void deleteEpic(int taskID) {
-        Epic epic = getEpicTasks().get(taskID);
-        save(epic);
+    public void deleteEpic(int taskID) throws IOException {
         super.deleteEpic(taskID);
+        save();
     }
 
     @Override
-    public void deleteSubtask(int taskID) {
-        Subtask subtask = getSubtasks().get(taskID);
-        save(subtask);
+    public void deleteSubtask(int taskID) throws IOException {
         super.deleteSubtask(taskID);
+        save();
     }
 
     @Override
-    public void updateSimpleTask(Task task) {
+    public void updateSimpleTask(Task task) throws IOException {
         super.updateSimpleTask(task);
-        save(task);
+        save();
     }
 
     @Override
-    public void updateEpicTask(Epic epic) {
+    public void updateEpicTask(Epic epic) throws IOException {
         super.updateEpicTask(epic);
-        save(epic);
+        save();
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
+    public void updateSubtask(Subtask subtask) throws IOException {
         super.updateSubtask(subtask);
-        save(subtask);
+        save();
     }
 
     @Override
-    public void deleteSimpleTasks() {
-        for (Task task : getSimpleTasks()) {
-            save(task);
-        }
+    public void deleteSimpleTasks() throws IOException {
         super.deleteSimpleTasks();
+        save();
     }
 
     @Override
-    public void deleteEpicTasks() {
-        for (Subtask subtask : getSubtasks()) {
-            save(subtask);
-        }
-        for (Epic epic : getEpicTasks()) {
-            save(epic);
-        }
+    public void deleteEpicTasks() throws IOException {
         super.deleteEpicTasks();
+        save();
     }
 
     @Override
-    public void deleteSubtasks() {
-        for (Subtask subtask : getSubtasks()) {
-            save(subtask);
-        }
+    public void deleteSubtasks() throws IOException {
         super.deleteSubtasks();
+        save();
     }
 }
