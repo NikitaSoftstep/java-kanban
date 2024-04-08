@@ -69,7 +69,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             String title = split[2];
             String category = split[3];
             String description = split[4];
-            String epicID = split.length == 6 ? split[5]: "0";
+            String epicID = split.length == 6 ? split[5] : "0";
 
             if (type.equals(TaskTypes.TASK.toString())) {
                 Task task = new Task(title, description);
