@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import task.Task;
 class InMemoryHistoryManagerTest {
 
-    private InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+    private final InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
     private static Task task1;
     private static Task task2;
 
@@ -19,10 +19,10 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void isEntryAdded() {
+     void isEntryAdded() {
         historyManager.add(task1);
         Assertions.assertEquals(1, historyManager.getHistory().size()); // проверка изменения размера
-        Assertions.assertEquals(task1, historyManager.getHistory().get(0));
+        Assertions.assertEquals(task1, historyManager.getHistory().getFirst());
         historyManager.add(task2);
         Assertions.assertEquals(2, historyManager.getHistory().size());
         historyManager.remove(task1.getTaskID());
