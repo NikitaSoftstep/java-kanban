@@ -9,7 +9,7 @@ public class Task {
     private int taskID;
     private TaskCategory category;
 
-    private int epicID = 0;
+    private int epicID;
 
     private TaskTypes taskType = TaskTypes.TASK;
 
@@ -60,6 +60,10 @@ public class Task {
 
     public TaskTypes getType() {
         return taskType;
+    }
+
+    public void setType(TaskTypes type) {
+        this.taskType = type;
     }
 
     @Override

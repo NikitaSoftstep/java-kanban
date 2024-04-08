@@ -1,5 +1,7 @@
 package taskmanager;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class Managers {
@@ -11,7 +13,7 @@ public class Managers {
         return new InMemoryHistoryManager();
     }
 
-    public static TaskManager getFileBackedTaskManager(String savedPath) {
+    public static TaskManager getFileBackedTaskManager(File savedPath) throws IOException {
         return new FileBackedTaskManager(savedPath);
     }
 

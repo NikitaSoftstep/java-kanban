@@ -2,15 +2,11 @@ import category.TaskCategory;
 import task.Epic;
 import task.Subtask;
 import task.Task;
-import taskmanager.FileBackedTaskManager;
 import taskmanager.Managers;
 import taskmanager.TaskManager;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,9 +14,17 @@ import java.util.Scanner;
 public class Main {
     static Scanner scanner = new Scanner(System.in);
 
-    static String savedManager = "src/resources/managerData.csv";
+    static File savedManager = new File("src/resources/managerData.csv");
 
-    static TaskManager fileBackedTaskManager = Managers.getFileBackedTaskManager(savedManager);
+    static TaskManager fileBackedTaskManager;
+
+    static {
+        try {
+            fileBackedTaskManager = Managers.getFileBackedTaskManager(savedManager);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void main(String[] args) throws IOException {
         startApp();

@@ -15,8 +15,6 @@ G
 src/task/TaskTypes.java,7\5\755e2683f98d4fa404a9cce40863d2d7fc60aeb2
 S
 #src/taskmanager/HistoryManager.java,6\3\637cb86bcfb7e66114e64b4fc1804dcfae54e5b0
-N
-src/resources/savedManager.csv,e\3\e3494d67281b8202ee7b786b4b62787e5072ae90
 M
 src/taskmanager/Managers.java,c\f\cf8b935e60e3c8498c29c7c03b20b3af11531e3d
 B
@@ -63,17 +61,21 @@ S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 w
 G.idea/sonarlint/issuestore/8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d,b\4\b4a0b63ce8560bbc5de0f9995c20cc861dc2adb3
-w
-G.idea/sonarlint/issuestore/e/3/e3494d67281b8202ee7b786b4b62787e5072ae90,f\6\f6cc0043ab83d381a57c6ac9182fac4bac931108
 ]
 -.idea/sonarlint/securityhotspotstore/index.pb,8\8\88a9255124c95bdc913197c120a8d560edc59c8e
 Å
 Q.idea/sonarlint/securityhotspotstore/8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d,1\0\10a03f31c4dce92cb371e761ce9429428bb6c176
-Å
-Q.idea/sonarlint/securityhotspotstore/e/3/e3494d67281b8202ee7b786b4b62787e5072ae90,2\3\234053064a65c4145e8960a9a7cce2023e32626a
 w
 G.idea/sonarlint/issuestore/2/e/2e51cff85f3d8e59195801d150297e8c7f076998,b\c\bc76c9167b2ce7136fb63c4374463b9989d544d4
-R
-"src/resources/savedManagerData.csv,7\4\74da3496690d1623744261d72bf6c08e458d4749
 M
 src/resources/managerData.csv,6\1\617b3cdc0c924da61ff80863c514713280d3ef8e
+@
+savedManager.csv,0\8\08632b9b0196b2d5fdf752b05d64ffc28e546603
+Å
+Q.idea/sonarlint/securityhotspotstore/6/1/617b3cdc0c924da61ff80863c514713280d3ef8e,a\c\acc5d75d709c51501ab80a87a603c6c7350cb0c3
+w
+G.idea/sonarlint/issuestore/6/1/617b3cdc0c924da61ff80863c514713280d3ef8e,4\6\468dc6d5169453018dc7461842d4ae7ea06f08d3
+Å
+Q.idea/sonarlint/securityhotspotstore/d/a/da787c01f1668bf1d0e48e1c4a453248c5e91072,0\3\0393b961e751a36e6bf5665df7ec4b11afcb0733
+w
+G.idea/sonarlint/issuestore/d/a/da787c01f1668bf1d0e48e1c4a453248c5e91072,a\f\af3c6f2cd51fdb332b75040dbe1bda3d6fa6adbc
