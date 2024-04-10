@@ -3,34 +3,33 @@ package taskmanager;
 import task.Epic;
 import task.Subtask;
 import task.Task;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
-    void addSimpleTask(Task task) throws IOException;
+    void addSimpleTask(Task task);
 
-    void addEpicTask(Epic epic) throws IOException;
+    void addEpicTask(Epic epic);
 
-    void addSubtask(Subtask subtask) throws IOException;
+    void addSubtask(Subtask subtask);
 
-    Task getSimpleTask(int taskID) throws IOException;
+    Task getSimpleTask(int taskID);
 
-    Epic getEpicTask(int taskID) throws IOException;
+    Epic getEpicTask(int taskID);
 
-    Subtask getSubtask(int taskID) throws IOException;
+    Subtask getSubtask(int taskID);
 
-    void deleteSimpleTask(int taskID) throws IOException;
+    void deleteSimpleTask(int taskID);
 
-    void deleteEpic(int taskID) throws IOException;
+    void deleteEpic(int taskID);
 
-    void deleteSubtask(int taskID) throws IOException;
+    void deleteSubtask(int taskID);
 
-    void updateSimpleTask(Task task) throws IOException;
+    void updateSimpleTask(Task task);
 
-    void updateEpicTask(Epic epic) throws IOException;
+    void updateEpicTask(Epic epic);
 
-    void updateSubtask(Subtask subtask) throws IOException;
+    void updateSubtask(Subtask subtask);
 
     ArrayList<Task> getSimpleTasks();
 
@@ -38,11 +37,11 @@ public interface TaskManager {
 
     ArrayList<Subtask> getSubtasks();
 
-    void deleteSimpleTasks() throws IOException;
+    void deleteSimpleTasks();
 
-    void deleteEpicTasks() throws IOException;
+    void deleteEpicTasks();
 
-    void deleteSubtasks() throws IOException;
+    void deleteSubtasks();
 
     List<Task> getHistory();
 }

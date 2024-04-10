@@ -2,6 +2,7 @@ import category.TaskCategory;
 import task.Epic;
 import task.Subtask;
 import task.Task;
+import taskmanager.FileBackedTaskManager;
 import taskmanager.Managers;
 import taskmanager.TaskManager;
 
@@ -14,17 +15,11 @@ import java.util.Scanner;
 public class Main {
     static Scanner scanner = new Scanner(System.in);
 
-    static File savedManager = new File("src/resources/managerData.csv");
+    static File savedManager = new File("src/resources/mapsAndHistory.csv");
 
-    static TaskManager fileBackedTaskManager;
+    static TaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(savedManager);
 
-    static {
-        try {
-            fileBackedTaskManager = Managers.getFileBackedTaskManager(savedManager);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
     public static void main(String[] args) throws IOException {
         startApp();

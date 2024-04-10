@@ -1,0 +1,8 @@
+
+r	java:S106A"+Replace this use of System.err by a logger.(ïù¯¯ûÿÿÿÿ8óòƒÌì1J$50a000c1-92c1-47bb-aec3-7d789fa2e90f
+m	java:S106H"+Replace this use of System.err by a logger.(ƒÊ´‚8óòƒÌì1J$3b21ed94-86ed-4c78-af44-15c50e53df59
+š
+java:S3776M"RRefactor this method to reduce its Cognitive Complexity from 28 to the 15 allowed.(´Ç“Œøÿÿÿÿ8ôòƒÌì1J$4d418308-e609-4ed1-bfab-d9dcb19d570e
+s	java:S106"+Replace this use of System.out by a logger.(©şêÜúÿÿÿÿ8ùòƒÌì1J$050de14e-7ed3-4bc5-82b1-f716827865de
+
+java:S6541M"ÅA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 67 to 64, Complexity from 17 to 14, Nesting Level from 4 to 2, Number of Variables from 23 to 6.(´Ç“Œøÿÿÿÿ8şòƒÌì1J$183aefc9-3d8f-4361-bc58-dc278e073889

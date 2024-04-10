@@ -10,14 +10,7 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\src\resources\history.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\src\resources\managerData.csv">
+        <entry key="\src\resources\mapsAndHistory.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
