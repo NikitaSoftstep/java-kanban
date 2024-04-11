@@ -1,0 +1,10 @@
+{
+	"Task":{
+		"title":"test",
+		"description":"test",
+		"taskID":1,
+		"category":"NEW",
+		"epicID":1,
+		"taskType":"TASK"
+	}
+}

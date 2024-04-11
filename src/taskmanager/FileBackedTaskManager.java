@@ -25,7 +25,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.savePath = savePath;
     }
 
-    private void save() {
+    void save() {
         BufferedWriter br = null;
         try {
             br = new BufferedWriter(new FileWriter(savePath));
