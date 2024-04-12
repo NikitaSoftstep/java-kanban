@@ -1,5 +1,0 @@
-
-¸
-java:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(§Èýâýÿÿÿÿ8Ò¯þëë1J$7de99bb1-40c4-4fc2-b3d9-8d466b85c5dc
-‘
-java:S1206"PThis class overrides "equals()" and should therefore also override "hashCode()".(Ý¢êÍýÿÿÿÿJ$2d79e1ff-81fb-4794-a7e4-59d5c60432ca
