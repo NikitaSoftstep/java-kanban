@@ -9,7 +9,7 @@ public class Task {
     private int taskID;
     private TaskCategory category;
 
-    private int epicID;
+
 
     private TaskTypes taskType = TaskTypes.TASK;
 
@@ -50,13 +50,9 @@ public class Task {
         this.description = description;
     }
 
-    public int getEpicID() {
-        return epicID;
-    }
 
-    public void setEpicID(int epicID) {
-        this.epicID = epicID;
-    }
+
+
 
     public TaskTypes getType() {
         return taskType;

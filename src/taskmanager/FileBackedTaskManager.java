@@ -25,7 +25,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.savePath = savePath;
     }
 
-    void save() {
+    public void save() {
         BufferedWriter br = null;
         try {
             br = new BufferedWriter(new FileWriter(savePath));
@@ -61,22 +61,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
 
-        } catch (TaskManagerIOException | IOException e) {
-            System.err.println(e.getMessage());
-        }
+        } catch (TaskManagerIOException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        } catch (IOException e) {
+            System.out.println(e.getStackTrace());
+        } finally {
             try {
                 if (br != null) {
                     br.close();
                 }
             } catch (TaskManagerIOException | IOException e) {
-                System.err.println("Ошибка закрытия BufferedWriter: " + e.getMessage());
+                System.out.println("Ошибка закрытия BufferedWriter: " + e.getMessage());
             }
-
+        }
     }
 
     public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager fileBackedTaskManager = null;
-        int counter;
+        int counter = 0;
         try {
             fileBackedTaskManager = new FileBackedTaskManager(file);
             List<String> lines = Files.readAllLines(Paths.get(String.valueOf(file)));
@@ -84,7 +87,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 if (line.matches("^\\d+,(TASK|EPIC|SUBTASK),.*$")) {
                     String[] split = line.split(",");
                     String id = split[0];
-                    counter = id.matches("-?\\d+") ? Integer.parseInt(id) : 0;
+                    counter = (id.matches("-?\\d+") && Integer.parseInt(id) > counter) ?
+                            Integer.parseInt(id) : counter;
                     fileBackedTaskManager.setCounter(counter);
                     String type = split[1];
                     String title = split[2];
@@ -139,9 +143,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
 
             }
-            throw new TaskManagerIOException("Ошибка чтения с файла");
-        } catch (TaskManagerIOException | IOException e) {
+        } catch (TaskManagerIOException e) {
             System.out.println(e.getMessage());
+            throw e;
+        } catch (IOException e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
         return fileBackedTaskManager;
     }

@@ -2,13 +2,19 @@ package task;
 
 public class Subtask extends Task {
 
-
+    private int epicID;
 
     public Subtask(String title, String description) {
         super(title, description);
     }
 
+    public int getEpicID() {
+        return epicID;
+    }
 
+    public void setEpicID(int id) {
+        epicID = id;
+    }
     @Override
     public TaskTypes getType() {
         return TaskTypes.SUBTASK;
