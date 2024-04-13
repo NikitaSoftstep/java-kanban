@@ -1,21 +1,19 @@
 package task;
 
-import category.TaskCategory;
+import category.TaskStatus;
 
 
 public class Task {
     private String title;
     private String description;
     private int taskID;
-    private TaskCategory category;
-
-
-
+    private TaskStatus status;
     private TaskTypes taskType = TaskTypes.TASK;
 
-    public Task(String title, String description) {
+    public Task(String title, String description, TaskStatus status) {
         this.title = title;
         this.description = description;
+        this.status = status;
     }
 
     public int getTaskID() {
@@ -26,12 +24,12 @@ public class Task {
         this.taskID = taskID;
     }
 
-    public TaskCategory getCategory() {
-        return category;
+    public TaskStatus getStatus() {
+        return status;
     }
 
-    public void setCategory(TaskCategory category) {
-        this.category = category;
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 
     public String getTitle() {
@@ -50,10 +48,6 @@ public class Task {
         this.description = description;
     }
 
-
-
-
-
     public TaskTypes getType() {
         return taskType;
     }
@@ -68,7 +62,7 @@ public class Task {
         return String.format("%s,%s,%s,%s,%s,", taskID,
                 TaskTypes.TASK,
                 title,
-                category,
+                status,
                 description);
     }
 

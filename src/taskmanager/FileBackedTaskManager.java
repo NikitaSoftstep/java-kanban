@@ -1,7 +1,7 @@
 package taskmanager;
 
 import exceptions.TaskManagerIOException;
-import category.TaskCategory;
+import category.TaskStatus;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -25,7 +25,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.savePath = savePath;
     }
 
-    public void save() {
+    private void save() {
         BufferedWriter br = null;
         try {
             br = new BufferedWriter(new FileWriter(savePath));
@@ -60,11 +60,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     br.write(id + ",");
                 }
             }
-
-        } catch (TaskManagerIOException e) {
-            System.out.println(e.getMessage());
-            throw e;
         } catch (IOException e) {
+            System.out.println(e.getMessage());
+            throw new TaskManagerIOException("Непроверяемое исключение");
+        } catch (TaskManagerIOException e) {
             System.out.println(e.getStackTrace());
         } finally {
             try {
@@ -92,29 +91,35 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     fileBackedTaskManager.setCounter(counter);
                     String type = split[1];
                     String title = split[2];
-                    String category = split[3];
+                    String status = split[3];
                     String description = split[4];
                     String epicID = split.length == 6 ? split[5] : "0";
 
                     if (type.equals(TaskTypes.TASK.toString())) {
-                        Task task = new Task(title, description);
+                        Task task = new Task(title, description, TaskStatus.valueOf(status));
                         task.setTaskID(Integer.parseInt(id));
                         task.setType(TaskTypes.valueOf(type));
-                        task.setCategory(TaskCategory.valueOf(category));
                         fileBackedTaskManager.tasks.put(Integer.parseInt(id), task);
                     } else if (type.equals(TaskTypes.EPIC.toString())) {
-                        Epic epic = new Epic(title, description);
+                        Epic epic = new Epic(title, description, TaskStatus.valueOf(status));
                         epic.setTaskID(Integer.parseInt(id));
                         epic.setType(TaskTypes.valueOf(type));
-                        epic.setCategory(TaskCategory.valueOf(category));
                         fileBackedTaskManager.epics.put(Integer.parseInt(id), epic);
                     } else if (type.equals(TaskTypes.SUBTASK.toString())) {
-                        Subtask subtask = new Subtask(title, description);
+                        Subtask subtask = new Subtask(title, description, TaskStatus.valueOf(status));
                         subtask.setTaskID(Integer.parseInt(id));
                         subtask.setType(TaskTypes.valueOf(type));
-                        subtask.setCategory(TaskCategory.valueOf(category));
                         subtask.setEpicID(Integer.parseInt(epicID));
                         fileBackedTaskManager.subtasks.put(Integer.parseInt(id), subtask);
+
+
+//                        int newID = increaseCounter();
+//                        subtask.setTaskID(newID);
+//                        subtasks.put(newID, subtask);
+//                        Epic epic = epics.get(subtask.getEpicID());
+//                        epic.addSubtaskID(newID);
+//                        int epicID = subtask.getEpicID();
+//                        correctEpicStatus(epicID);
                     }
                 }
 
@@ -143,10 +148,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
 
             }
-        } catch (TaskManagerIOException e) {
-            System.out.println(e.getMessage());
-            throw e;
         } catch (IOException e) {
+            System.out.println(e.getMessage());
+            throw new TaskManagerIOException("Непроверяемое исключение");
+        } catch (TaskManagerIOException e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
         }
         return fileBackedTaskManager;

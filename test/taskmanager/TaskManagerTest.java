@@ -1,6 +1,6 @@
 package taskmanager;
 
-import category.TaskCategory;
+import category.TaskStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,6 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.Assert.assertTrue;
 
 abstract class TaskManagerTest<T extends TaskManager> {
@@ -43,11 +42,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void checkIfSubtaskAddedAndRetrieved() {
         Epic epic = new Epic("title", "description");
-        epic.setCategory(TaskCategory.NEW);
+        epic.setStatus(TaskStatus.NEW);
         taskManager.addEpicTask(epic);
         int epicID = epic.getTaskID();
         Subtask tsk = new Subtask("заголовок", "описание");
-        tsk.setCategory(TaskCategory.NEW);
+        tsk.setStatus(TaskStatus.NEW);
         tsk.setEpicID(epicID);
         taskManager.addSubtask(tsk);
         int tskID = tsk.getTaskID();
@@ -58,31 +57,31 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void checkEqualityBeforeAndAfterAddingTask() {
         Task task = new Task("заголовок", "описание");
-        task.setCategory(TaskCategory.NEW);
+        task.setStatus(TaskStatus.NEW);
         taskManager.addSimpleTask(task);
         Assertions.assertEquals("заголовок", task.getTitle());
         Assertions.assertEquals("описание", task.getDescription());
-        Assertions.assertEquals(TaskCategory.NEW, task.getCategory());
+        Assertions.assertEquals(TaskStatus.NEW, task.getStatus());
     }
 
     @Test
     public void checkEqualityBeforeAndAfterAddingEpic() {
         Epic task = new Epic("заголовок", "описание");
-        task.setCategory(TaskCategory.NEW);
+        task.setStatus(TaskStatus.NEW);
         taskManager.addEpicTask(task);
         Assertions.assertEquals("заголовок", task.getTitle());
         Assertions.assertEquals("описание", task.getDescription());
-        Assertions.assertEquals(TaskCategory.NEW, task.getCategory());
+        Assertions.assertEquals(TaskStatus.NEW, task.getStatus());
     }
 
     @Test
     public void checkEqualityBeforeAndAfterAddingSubtask() {
         Subtask task = new Subtask("заголовок", "описание");
-        task.setCategory(TaskCategory.NEW);
+        task.setStatus(TaskStatus.NEW);
         taskManager.addSubtask(task);
         Assertions.assertEquals("заголовок", task.getTitle());
         Assertions.assertEquals("описание", task.getDescription());
-        Assertions.assertEquals(TaskCategory.NEW, task.getCategory());
+        Assertions.assertEquals(TaskStatus.NEW, task.getStatus());
     }
 
 

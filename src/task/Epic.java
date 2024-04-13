@@ -1,13 +1,17 @@
 package task;
 
+import category.TaskStatus;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
 
+    private TaskTypes taskType = TaskTypes.EPIC;
+    private TaskStatus status;
     private ArrayList<Integer> subtaskIDs = new ArrayList<>();
 
-    public Epic(String title, String description) {
-        super(title, description);
+    public Epic(String title, String description, TaskStatus status) {
+        super(title, description, status);
     }
 
     public void addSubtaskID(int subtaskID) {
@@ -18,10 +22,7 @@ public class Epic extends Task {
         return subtaskIDs;
     }
 
-    @Override
-    public TaskTypes getType() {
-        return TaskTypes.EPIC;
-    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -36,7 +37,7 @@ public class Epic extends Task {
         return String.format("%s,%s,%s,%s,%s,", getTaskID(),
                 TaskTypes.EPIC,
                 getTitle(),
-                getCategory(),
+                getStatus(),
                 getDescription());
     }
 }

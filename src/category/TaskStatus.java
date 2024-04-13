@@ -1,6 +1,6 @@
 package category;
 
-public enum TaskCategory {
+public enum TaskStatus {
     NEW,
     IN_PROGRESS,
     DONE

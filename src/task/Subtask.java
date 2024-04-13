@@ -1,11 +1,15 @@
 package task;
 
+import category.TaskStatus;
+
 public class Subtask extends Task {
 
     private int epicID;
+    private TaskTypes taskType = TaskTypes.SUBTASK;
 
-    public Subtask(String title, String description) {
-        super(title, description);
+
+    public Subtask(String title, String description, TaskStatus status) {
+        super(title, description, status);
     }
 
     public int getEpicID() {
@@ -16,10 +20,6 @@ public class Subtask extends Task {
         epicID = id;
     }
 
-    @Override
-    public TaskTypes getType() {
-        return TaskTypes.SUBTASK;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -34,7 +34,7 @@ public class Subtask extends Task {
         return String.format("%s,%s,%s,%s,%s,%s", getTaskID(),
                 TaskTypes.SUBTASK,
                 getTitle(),
-                getCategory(),
+                getStatus(),
                 getDescription(),
                 getEpicID());
     }

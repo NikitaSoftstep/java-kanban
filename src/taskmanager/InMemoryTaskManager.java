@@ -1,6 +1,6 @@
 package taskmanager;
 
-import category.TaskCategory;
+import category.TaskStatus;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -50,7 +50,7 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epics.get(subtask.getEpicID());
             epic.addSubtaskID(newID);
             int epicID = subtask.getEpicID();
-            correctEpicCategory(epicID);
+            correctEpicStatus(epicID);
         }
     }
 
@@ -100,7 +100,7 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epics.get(epicID);
             history.remove(taskID);
             epic.getSubtaskIDs().remove(taskID);
-            correctEpicCategory(epicID);
+            correctEpicStatus(epicID);
         }
     }
 
@@ -115,8 +115,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpicTask(Epic epic) {
         if (epics.containsKey(epic.getTaskID())) {
             Epic prevEpic = epics.get(epic.getTaskID());
-            TaskCategory category = prevEpic.getCategory();
-            epic.setCategory(category);
+            TaskStatus status = prevEpic.getStatus();
+            epic.setStatus(status);
             epics.put(epic.getTaskID(), epic);
         }
     }
@@ -129,22 +129,22 @@ public class InMemoryTaskManager implements TaskManager {
             int epicID = prevTask.getEpicID();
             subtask.setEpicID(epicID);
             subtasks.put(taskID, subtask);
-            correctEpicCategory(epicID);
+            correctEpicStatus(epicID);
         }
     }
 
-    protected void correctEpicCategory(int epicID) {
+    protected void correctEpicStatus(int epicID) {
         Epic epic = epics.get(epicID);
         ArrayList<Task> currentTasks = new ArrayList<>(subtasks.values());
         if (currentTasks.stream().allMatch(Objects::isNull) ||
                 currentTasks.stream().allMatch(task ->
-                        task.getCategory().equals(TaskCategory.NEW))) {
-            epic.setCategory(TaskCategory.NEW);
+                        task.getStatus().equals(TaskStatus.NEW))) {
+            epic.setStatus(TaskStatus.NEW);
         } else if (currentTasks.stream().anyMatch(task ->
-                task.getCategory().equals(TaskCategory.IN_PROGRESS))) {
-            epic.setCategory(TaskCategory.IN_PROGRESS);
+                task.getStatus().equals(TaskStatus.IN_PROGRESS))) {
+            epic.setStatus(TaskStatus.IN_PROGRESS);
         } else {
-            epic.setCategory(TaskCategory.DONE);
+            epic.setStatus(TaskStatus.DONE);
         }
 
     }
@@ -191,7 +191,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.clear();
         for (Epic epic : epics.values()) {
             epic.getSubtaskIDs().clear();
-            epic.setCategory(TaskCategory.NEW);
+            epic.setStatus(TaskStatus.NEW);
         }
     }
 
