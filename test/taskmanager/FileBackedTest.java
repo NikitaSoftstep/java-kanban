@@ -1,5 +1,6 @@
 package taskmanager;
 
+import category.TaskStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ class FileBackedTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Test
     void testSave() throws IOException {
-        Task task = new Task("title", "description");
+        Task task = new Task("title", "description", TaskStatus.NEW);
         fileBackedTaskManager.addSimpleTask(task);
         List<String> list = Files.readAllLines(Path.of(savePath));
         assertTrue(list.contains(task.toString()));
@@ -46,7 +47,7 @@ class FileBackedTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Test
     void testLoadFromFile() throws IOException {
-        Epic epic = new Epic("title", "descr");
+        Epic epic = new Epic("title", "descr", TaskStatus.NEW);
         fileBackedTaskManager.addEpicTask(epic);
         int id = epic.getTaskID();
         fileBackedTaskManager.getEpicTask(id);

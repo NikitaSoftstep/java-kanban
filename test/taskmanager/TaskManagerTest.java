@@ -23,7 +23,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void testAddTask() {
-        Task tsk = new Task("заголовок", "описание");
+        Task tsk = new Task("заголовок", "описание", TaskStatus.NEW);
         taskManager.addSimpleTask(tsk);
         int tskID = tsk.getTaskID();
         Assertions.assertEquals(1, taskManager.getSimpleTasks().size());
@@ -32,7 +32,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void checkIfEpicAddedAndRetrieved() {
-        Epic tsk = new Epic("заголовок", "описание");
+        Epic tsk = new Epic("заголовок", "описание", TaskStatus.NEW);
         taskManager.addEpicTask(tsk);
         int tskID = tsk.getTaskID();
         Assertions.assertEquals(1, taskManager.getEpicTasks().size());
@@ -41,11 +41,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void checkIfSubtaskAddedAndRetrieved() {
-        Epic epic = new Epic("title", "description");
+        Epic epic = new Epic("title", "description", TaskStatus.NEW);
         epic.setStatus(TaskStatus.NEW);
         taskManager.addEpicTask(epic);
         int epicID = epic.getTaskID();
-        Subtask tsk = new Subtask("заголовок", "описание");
+        Subtask tsk = new Subtask("заголовок", "описание", TaskStatus.NEW);
         tsk.setStatus(TaskStatus.NEW);
         tsk.setEpicID(epicID);
         taskManager.addSubtask(tsk);
@@ -56,7 +56,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void checkEqualityBeforeAndAfterAddingTask() {
-        Task task = new Task("заголовок", "описание");
+        Task task = new Task("заголовок", "описание", TaskStatus.NEW);
         task.setStatus(TaskStatus.NEW);
         taskManager.addSimpleTask(task);
         Assertions.assertEquals("заголовок", task.getTitle());
@@ -66,7 +66,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void checkEqualityBeforeAndAfterAddingEpic() {
-        Epic task = new Epic("заголовок", "описание");
+        Epic task = new Epic("заголовок", "описание", TaskStatus.NEW);
         task.setStatus(TaskStatus.NEW);
         taskManager.addEpicTask(task);
         Assertions.assertEquals("заголовок", task.getTitle());
@@ -76,7 +76,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void checkEqualityBeforeAndAfterAddingSubtask() {
-        Subtask task = new Subtask("заголовок", "описание");
+        Subtask task = new Subtask("заголовок", "описание", TaskStatus.NEW);
         task.setStatus(TaskStatus.NEW);
         taskManager.addSubtask(task);
         Assertions.assertEquals("заголовок", task.getTitle());

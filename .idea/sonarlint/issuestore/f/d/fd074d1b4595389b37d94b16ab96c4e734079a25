@@ -1,0 +1,13 @@
+
+r	java:S106@"+Replace this use of System.out by a logger.(©şêÜúÿÿÿÿ8Æ²½Ãí1J$4ceb49ff-89f7-440f-af73-d15184017677
+r	java:S106C"+Replace this use of System.out by a logger.(˜É„üÿÿÿÿ8Æ²½Ãí1J$14bcada0-ca1e-4e41-bb87-f0cfd5750584
+m	java:S106J"+Replace this use of System.out by a logger.(åí”8Ç²½Ãí1J$3585cbbb-1754-4eb3-be6c-6e60dc5764ca
+r
+java:S2093"*Change this "try" to a try-with-resources.(¡»¢üùÿÿÿÿ8Ç²½Ãí1J$082384a4-38c9-4b6c-b196-19bb9f71bbb5
+š
+java:S3776O"RRefactor this method to reduce its Cognitive Complexity from 30 to the 15 allowed.(´Ç“Œøÿÿÿÿ8È²½Ãí1J$bcccd0f5-8292-4fbd-91ec-c657d42cb832
+ƒ	java:S125t"<This block of commented-out lines of code should be removed.(åàäˆüÿÿÿÿ8–íÎÃí1J$bcb39c9b-a44b-4af2-a7fb-1619acfb05fe
+s	java:S106˜"+Replace this use of System.out by a logger.(©şêÜúÿÿÿÿ8Í²½Ãí1J$6f6b08b2-5460-4d49-b4c0-b07b36831a14
+s	java:S106›"+Replace this use of System.out by a logger.(™°Èšúÿÿÿÿ8Í²½Ãí1J$690ab671-b4ee-4993-bfee-38d4af7bdcc6
+
+java:S6541O"ÅA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 67 to 64, Complexity from 18 to 14, Nesting Level from 4 to 2, Number of Variables from 24 to 6.(´Ç“Œøÿÿÿÿ8Ñ²½Ãí1J$f6dd1d61-046a-4aaf-9c31-b5ede56ef23d
