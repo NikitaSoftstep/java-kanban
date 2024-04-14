@@ -1,7 +1,6 @@
 package taskmanager;
 
 import task.Task;
-
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
@@ -15,20 +14,22 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        int taskID = task.getTaskID();
-        if (idAndTaskNode.containsKey(taskID)) {
-            remove(taskID);
-        }
-        Node newNode = new Node(task);
+        if (task != null) {
+            int taskID = task.getTaskID();
+            if (idAndTaskNode.containsKey(taskID)) {
+                remove(taskID);
+            }
+            Node newNode = new Node(task);
 
-        if (head == null) {
-            head = newNode;
-        } else {
-            tail.next = newNode;
-            newNode.prev = tail;
+            if (head == null) {
+                head = newNode;
+            } else {
+                tail.next = newNode;
+                newNode.prev = tail;
+            }
+            tail = newNode;
+            idAndTaskNode.put(taskID, newNode);
         }
-        tail = newNode;
-        idAndTaskNode.put(taskID, newNode);
     }
 
     @Override

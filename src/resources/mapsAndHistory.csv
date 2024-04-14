@@ -1,0 +1,8 @@
+id,type,name,status,description,epic
+16,TASK,мать,NEW,и дочь,
+18,EPIC,озеро,DONE,лохнес,
+15,EPIC,тец,DONE,и сын,
+17,SUBTASK,моря,DONE,и океаны,15
+19,SUBTASK,оо,NEW,оооо,18
+
+ids

@@ -1,23 +1,30 @@
-import category.TaskCategory;
+import category.TaskStatus;
 import task.Epic;
 import task.Subtask;
 import task.Task;
-import taskmanager.Managers;
+import taskmanager.FileBackedTaskManager;
 import taskmanager.TaskManager;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
-    static TaskManager inMemoryTaskManager = Managers.getDefaultManager();
 
-    public static void main(String[] args) {
+    static File savedManager = new File("src/resources/mapsAndHistory.csv");
+
+    static TaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(savedManager);
+
+
+
+    public static void main(String[] args) throws IOException {
         startApp();
     }
 
-    public static void startApp() {
+    public static void startApp() throws IOException {
         while (true) {
             printMenu();
             int action = scanner.nextInt();
@@ -37,7 +44,7 @@ public class Main {
         System.out.println("8 - выход из программы:");
     }
 
-    public static void chooseAction(int action) {
+    public static void chooseAction(int action) throws IOException {
         switch (action) {
             case 1 -> {
                 System.out.println("Выберите тип задачи:" +
@@ -128,9 +135,9 @@ public class Main {
         String title = scanner.nextLine();
         System.out.println("Введите описание задачи:");
         String description = scanner.nextLine();
-        Task task = new Task(title, description);
-        task.setCategory(TaskCategory.NEW);
-        inMemoryTaskManager.addSimpleTask(task);
+        TaskStatus status = TaskStatus.NEW;
+        Task task = new Task(title, description, status);
+        fileBackedTaskManager.addSimpleTask(task);
     }
 
     public static void createEpicTask() {
@@ -138,9 +145,9 @@ public class Main {
         String title = scanner.nextLine();
         System.out.println("Введите описание эпической задачи:");
         String description = scanner.nextLine();
-        Epic epic = new Epic(title, description);
-        epic.setCategory(TaskCategory.NEW);
-        inMemoryTaskManager.addEpicTask(epic);
+        TaskStatus status = TaskStatus.NEW;
+        Epic epic = new Epic(title, description, status);
+        fileBackedTaskManager.addEpicTask(epic);
     }
 
     public static void createSubtask() {
@@ -151,17 +158,17 @@ public class Main {
         String title = scanner.nextLine();
         System.out.println("Введите описание подзадачи:");
         String description = scanner.nextLine();
-        Subtask subtask = new Subtask(title, description);
+        TaskStatus status = TaskStatus.NEW;
+        Subtask subtask = new Subtask(title, description, status);
         subtask.setEpicID(epicID);
-        subtask.setCategory(TaskCategory.NEW);
-        inMemoryTaskManager.addSubtask(subtask);
+        fileBackedTaskManager.addSubtask(subtask);
     }
 
     public static void getSimpleTask() {
         System.out.println("Введите ID задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        Task task = inMemoryTaskManager.getSimpleTask(taskID);
+        Task task = fileBackedTaskManager.getSimpleTask(taskID);
         System.out.println(task);
     }
 
@@ -169,7 +176,7 @@ public class Main {
         System.out.println("Введите ID эпической задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        Epic epic = inMemoryTaskManager.getEpicTask(taskID);
+        Epic epic = fileBackedTaskManager.getEpicTask(taskID);
         System.out.println(epic);
     }
 
@@ -177,7 +184,7 @@ public class Main {
         System.out.println("Введите ID подзадачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        Subtask subtask = inMemoryTaskManager.getSubtask(taskID);
+        Subtask subtask = fileBackedTaskManager.getSubtask(taskID);
         System.out.println(subtask);
     }
 
@@ -185,21 +192,21 @@ public class Main {
         System.out.println("Введите ID задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        inMemoryTaskManager.deleteSimpleTask(taskID);
+        fileBackedTaskManager.deleteSimpleTask(taskID);
     }
 
     public static void deleteEpicTask() {
         System.out.println("Введите ID эпической задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        inMemoryTaskManager.deleteEpic(taskID);
+        fileBackedTaskManager.deleteEpic(taskID);
     }
 
     public static void deleteSubtask() {
         System.out.println("Введите ID эпической задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
-        inMemoryTaskManager.deleteSubtask(taskID);
+        fileBackedTaskManager.deleteSubtask(taskID);
     }
 
     public static void updateSimpleTask() {
@@ -210,21 +217,19 @@ public class Main {
         String title = scanner.nextLine();
         System.out.println("Введите описание задачи:");
         String description = scanner.nextLine();
-        Task task = new Task(title, description);
-        task.setTaskID(taskID);
-        System.out.println("Введите категорию/статус задачи: 1 - in progress, 2 - done");
-        TaskCategory category;
+        System.out.println("Введите статус задачи: 1 - in progress, 2 - done");
+        TaskStatus status = TaskStatus.NEW;
         switch (scanner.nextInt()) {
             case 1 -> {
-                category = TaskCategory.IN_PROGRESS;
-                task.setCategory(category);
+                status = TaskStatus.IN_PROGRESS;
             }
             case 2 -> {
-                category = TaskCategory.DONE;
-                task.setCategory(category);
+                status = TaskStatus.DONE;
             }
         }
-        inMemoryTaskManager.updateSimpleTask(task);
+        Task task = new Task(title, description, status);
+        task.setTaskID(taskID);
+        fileBackedTaskManager.updateSimpleTask(task);
     }
 
     public static void updateEpicTask() {
@@ -235,12 +240,13 @@ public class Main {
         String title = scanner.nextLine();
         System.out.println("Введите описание задачи:");
         String description = scanner.nextLine();
-        Epic epic = new Epic(title, description);
+        TaskStatus status = TaskStatus.NEW;
+        Epic epic = new Epic(title, description, status);
         epic.setTaskID(taskID);
-        inMemoryTaskManager.updateEpicTask(epic);
+        fileBackedTaskManager.updateEpicTask(epic);
     }
 
-    public static void updateSubtask() {
+    public static void updateSubtask() throws IOException {
         System.out.println("Введите ID задачи:");
         int taskID = scanner.nextInt();
         scanner.nextLine();
@@ -248,49 +254,43 @@ public class Main {
         String title = scanner.nextLine();
         System.out.println("Введите описание задачи:");
         String description = scanner.nextLine();
-        Subtask subtask = new Subtask(title, description);
-        subtask.setTaskID(taskID);
-        System.out.println("Введите категорию/статус задачи: 1 - in progress, 2 - done");
-        TaskCategory category;
+        System.out.println("Введите статус задачи: 1 - in progress, 2 - done");
+        TaskStatus status = TaskStatus.NEW;
         switch (scanner.nextInt()) {
-            case 1 -> {
-                category = TaskCategory.IN_PROGRESS;
-                subtask.setCategory(category);
-            }
-            case 2 -> {
-                category = TaskCategory.DONE;
-                subtask.setCategory(category);
-            }
+            case 1 -> status = TaskStatus.IN_PROGRESS;
+            case 2 -> status = TaskStatus.DONE;
         }
-        inMemoryTaskManager.updateSubtask(subtask);
+        Subtask subtask = new Subtask(title, description, status);
+        subtask.setTaskID(taskID);
+        fileBackedTaskManager.updateSubtask(subtask);
     }
 
     public static void showSimpleTasks() {
-        System.out.println(inMemoryTaskManager.getSimpleTasks());
+        System.out.println(fileBackedTaskManager.getSimpleTasks());
     }
 
     public static void showEpicTasks() {
-        System.out.println(inMemoryTaskManager.getEpicTasks());
+        System.out.println(fileBackedTaskManager.getEpicTasks());
     }
 
     public static void showSubtasks() {
-        System.out.println(inMemoryTaskManager.getSubtasks());
+        System.out.println(fileBackedTaskManager.getSubtasks());
     }
 
-    public static void deleteSimpleTasks() {
-        inMemoryTaskManager.deleteSimpleTasks();
+    public static void deleteSimpleTasks() throws IOException {
+        fileBackedTaskManager.deleteSimpleTasks();
     }
 
-    public static void deleteEpicTasks() {
-        inMemoryTaskManager.deleteEpicTasks();
+    public static void deleteEpicTasks() throws IOException {
+        fileBackedTaskManager.deleteEpicTasks();
     }
 
-    public static void deleteSubtasks() {
-        inMemoryTaskManager.deleteSubtasks();
+    public static void deleteSubtasks() throws IOException {
+        fileBackedTaskManager.deleteSubtasks();
     }
 
     public static void showHistory() {
-        List<Task> tasksHistory = inMemoryTaskManager.getHistory();
+        List<Task> tasksHistory = fileBackedTaskManager.getHistory();
         System.out.println(tasksHistory);
     }
 }

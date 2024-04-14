@@ -1,6 +1,0 @@
-package taskmanager;
-
-class HistoryManagerTest {
-
-
-}
