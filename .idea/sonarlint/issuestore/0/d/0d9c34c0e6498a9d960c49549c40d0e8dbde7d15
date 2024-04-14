@@ -1,10 +1,0 @@
-
-±
-java:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(§ÈıâıÿÿÿÿJ$c3d61122-5ac8-4775-8aee-dd962fd21fe7
-‘
-java:S1206"PThis class overrides "equals()" and should therefore also override "hashCode()".(İ¢êÍıÿÿÿÿJ$497b936e-60dc-48a2-97f3-2a1dbf98cf7f
-t
-java:S1068	",Remove this unused "taskType" private field.(ô«ª×ıÿÿÿÿ8÷ŠÂí1J$d0525afc-c111-4c9f-a928-edbc9df7736b
-r
-java:S1068
-"*Remove this unused "status" private field.( ©Ê²ÿÿÿÿÿ8î°Âí1J$ea9aff70-b4af-4d58-a6b1-dc4df6ec0470

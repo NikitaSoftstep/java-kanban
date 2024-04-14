@@ -62,9 +62,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            throw new TaskManagerIOException("Непроверяемое исключение");
-        } catch (TaskManagerIOException e) {
-            System.out.println(e.getStackTrace());
+            throw new TaskManagerIOException("Runtime exception: возможно ошибка поиска файлов или ресурсов");
         } finally {
             try {
                 if (br != null) {
@@ -150,9 +148,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            throw new TaskManagerIOException("Непроверяемое исключение");
-        } catch (TaskManagerIOException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            throw new TaskManagerIOException("Runtime exception: возможна ошибка поиска ресурсов или файла");
         }
         return fileBackedTaskManager;
     }
