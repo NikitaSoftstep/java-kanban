@@ -2,6 +2,9 @@ package task;
 
 import category.TaskStatus;
 
+import java.time.Duration;
+import java.time.Instant;
+
 public class Subtask extends Task {
 
     private int epicID;
@@ -10,6 +13,10 @@ public class Subtask extends Task {
 
     public Subtask(String title, String description, TaskStatus status) {
         super(title, description, status);
+    }
+
+    public Subtask(String title, String description, TaskStatus status, Instant startTime, Duration duration) {
+        super(title, description, status, startTime, duration);
     }
 
     public int getEpicID() {

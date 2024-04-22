@@ -2,6 +2,10 @@ package task;
 
 import category.TaskStatus;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Optional;
+
 
 public class Task {
     private String title;
@@ -10,10 +14,49 @@ public class Task {
     private TaskStatus status;
     private TaskTypes taskType = TaskTypes.TASK;
 
+    private Duration duration;
+
+    private Instant startTime;
+
+    private Instant endTime;
     public Task(String title, String description, TaskStatus status) {
         this.title = title;
         this.description = description;
         this.status = status;
+    }
+
+    public Task(String title,
+                String description,
+                TaskStatus status,
+                Instant startTime,
+                Duration duration) {
+        this.description = description;
+        this.title = title;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public Instant getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Instant startTime) {
+        this.startTime = startTime;
+    }
+
+
+    public Instant getEndTime() {
+        endTime = startTime.plus(duration);
+        return endTime;
     }
 
     public int getTaskID() {

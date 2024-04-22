@@ -2,6 +2,8 @@ package task;
 
 import category.TaskStatus;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -10,8 +12,21 @@ public class Epic extends Task {
     private TaskStatus status;
     private ArrayList<Integer> subtaskIDs = new ArrayList<>();
 
+    private Duration duration;
+    private Instant startTime;
+    private Instant endTime;
+
     public Epic(String title, String description, TaskStatus status) {
         super(title, description, status);
+
+    }
+
+    public void calculateStartEndTimeAndDuration(Instant startTime,
+                                                 Instant endTime,
+                                                 Duration duration) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.duration = duration;
     }
 
     public void addSubtaskID(int subtaskID) {
