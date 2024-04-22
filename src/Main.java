@@ -1,3 +1,4 @@
+
 import category.TaskStatus;
 import task.Epic;
 import task.Subtask;
@@ -5,8 +6,11 @@ import task.Task;
 import taskmanager.FileBackedTaskManager;
 import taskmanager.TaskManager;
 
+import java.time.*;
+
 import java.io.File;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,6 +22,7 @@ public class Main {
 
     static TaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(savedManager);
 
+    static public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
 
     public static void main(String[] args) throws IOException {
@@ -136,7 +141,23 @@ public class Main {
         System.out.println("Введите описание задачи:");
         String description = scanner.nextLine();
         TaskStatus status = TaskStatus.NEW;
-        Task task = new Task(title, description, status);
+        System.out.println("Введите время начала задачи в формате \"дд.мм.гггг чч:мм\" или \"0\", если нет:");
+        String startTime = scanner.nextLine();
+        int duration;
+        Task task;
+        if (!startTime.equals("0")) {
+            System.out.println("Введите продолжительность задачи в мин:");
+            duration = scanner.nextInt();
+            scanner.nextLine();
+            LocalDateTime local = LocalDateTime.parse(startTime, formatter);
+            ZoneId zoneID = ZoneId.of("UTC");
+            ZonedDateTime zonedDateTime = local.atZone(zoneID);
+            Instant instantTime = zonedDateTime.toInstant();
+            Duration dur = Duration.ofMinutes(duration);
+            task = new Task(title, description, status, instantTime, dur);
+        } else {
+            task = new Task(title, description, status);
+        }
         fileBackedTaskManager.addSimpleTask(task);
     }
 
@@ -159,7 +180,22 @@ public class Main {
         System.out.println("Введите описание подзадачи:");
         String description = scanner.nextLine();
         TaskStatus status = TaskStatus.NEW;
-        Subtask subtask = new Subtask(title, description, status);
+        System.out.println("Введите время начала задачи в формате \"дд.мм.гггг чч:мм\" или \"0\", если нет:");
+        String startTime = scanner.nextLine();
+        int duration;
+        Subtask subtask;
+        if (!startTime.equals("0")) {
+            System.out.println("Введите продолжительность задачи в мин:");
+            duration = scanner.nextInt();
+            scanner.nextLine();
+            LocalDateTime local = LocalDateTime.parse(startTime, formatter);
+
+            Instant instantTime = local.atOffset(ZoneOffset.UTC).toInstant();
+            Duration dur = Duration.ofMinutes(duration);
+            subtask = new Subtask(title, description, status, instantTime, dur);
+        } else {
+            subtask = new Subtask(title, description, status);
+        }
         subtask.setEpicID(epicID);
         fileBackedTaskManager.addSubtask(subtask);
     }

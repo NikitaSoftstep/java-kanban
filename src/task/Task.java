@@ -2,9 +2,8 @@ package task;
 
 import category.TaskStatus;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Optional;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 
 
 public class Task {
@@ -19,6 +18,9 @@ public class Task {
     private Instant startTime;
 
     private Instant endTime;
+
+    static public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+
     public Task(String title, String description, TaskStatus status) {
         this.title = title;
         this.description = description;
@@ -57,6 +59,10 @@ public class Task {
     public Instant getEndTime() {
         endTime = startTime.plus(duration);
         return endTime;
+    }
+
+    public void setEndTime() {
+        endTime = startTime.plus(duration);
     }
 
     public int getTaskID() {
@@ -101,12 +107,28 @@ public class Task {
 
     @Override
     public String toString() {
-        // id,type,name,status,description,epic
-        return String.format("%s,%s,%s,%s,%s,", taskID,
-                TaskTypes.TASK,
-                title,
-                status,
-                description);
+        ZonedDateTime zone;
+        int duration1;
+        if (!(startTime == null) && !(duration == null)) {
+            LocalDateTime local = LocalDateTime.ofInstant(startTime, ZoneOffset.UTC);
+            duration1 = (int) duration.toMinutes();
+            return String.format("%s,%s,%s,%s,%s,%s,%s", taskID,
+                    TaskTypes.TASK,
+                    title,
+                    status,
+                    description,
+                    formatter.format(local),
+                    duration1);
+        } else {
+            // id,type,name,status,description,epic
+            return String.format("%s,%s,%s,%s,%s,%s,%s", taskID,
+                    TaskTypes.TASK,
+                    title,
+                    status,
+                    description,
+                    "null",
+                    "null");
+        }
     }
 
     @Override

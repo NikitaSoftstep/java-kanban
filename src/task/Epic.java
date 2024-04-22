@@ -2,8 +2,7 @@ package task;
 
 import category.TaskStatus;
 
-import java.time.Duration;
-import java.time.Instant;
+import java.time.*;
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -12,8 +11,6 @@ public class Epic extends Task {
     private TaskStatus status;
     private ArrayList<Integer> subtaskIDs = new ArrayList<>();
 
-    private Duration duration;
-    private Instant startTime;
     private Instant endTime;
 
     public Epic(String title, String description, TaskStatus status) {
@@ -21,12 +18,8 @@ public class Epic extends Task {
 
     }
 
-    public void calculateStartEndTimeAndDuration(Instant startTime,
-                                                 Instant endTime,
-                                                 Duration duration) {
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.duration = duration;
+    public void setEndTime(Instant endtime) {
+        this.endTime = endtime;
     }
 
     public void addSubtaskID(int subtaskID) {
@@ -49,10 +42,27 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return String.format("%s,%s,%s,%s,%s,", getTaskID(),
-                TaskTypes.EPIC,
-                getTitle(),
-                getStatus(),
-                getDescription());
+        ZonedDateTime zone;
+        int duration1;
+        if (!(getStartTime() == null) && !(getDuration() == null)) {
+            LocalDateTime local = LocalDateTime.ofInstant(getStartTime(), ZoneOffset.UTC);
+            duration1 = (int) getDuration().toMinutes();
+            return String.format("%s,%s,%s,%s,%s,%s,%s", getTaskID(),
+                    TaskTypes.EPIC,
+                    getTitle(),
+                    getStatus(),
+                    getDescription(),
+                    formatter.format(local),
+                    duration1);
+        } else {
+            // id,type,name,status,description,epic
+            return String.format("%s,%s,%s,%s,%s,%s,%s", getTaskID(),
+                    TaskTypes.EPIC,
+                    getTitle(),
+                    getStatus(),
+                    getDescription(),
+                    "null",
+                    "null");
+        }
     }
 }

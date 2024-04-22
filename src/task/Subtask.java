@@ -2,8 +2,7 @@ package task;
 
 import category.TaskStatus;
 
-import java.time.Duration;
-import java.time.Instant;
+import java.time.*;
 
 public class Subtask extends Task {
 
@@ -38,11 +37,29 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return String.format("%s,%s,%s,%s,%s,%s", getTaskID(),
-                TaskTypes.SUBTASK,
-                getTitle(),
-                getStatus(),
-                getDescription(),
-                getEpicID());
+        ZonedDateTime zone;
+        int duration1;
+        if (!(getStartTime() == null) && !(getDuration() == null)) {
+            LocalDateTime local = LocalDateTime.ofInstant(getStartTime(), ZoneOffset.UTC);
+            duration1 = (int) getDuration().toMinutes();
+            return String.format("%s,%s,%s,%s,%s,%s,%s,%s", getTaskID(),
+                    TaskTypes.SUBTASK,
+                    getTitle(),
+                    getStatus(),
+                    getDescription(),
+                    formatter.format(local),
+                    duration1,
+                    epicID);
+        } else {
+            // id,type,name,status,description,epic
+            return String.format("%s,%s,%s,%s,%s,%s,%s,%s", getTaskID(),
+                    TaskTypes.SUBTASK,
+                    getTitle(),
+                    getStatus(),
+                    getDescription(),
+                    "null",
+                    "null",
+                    epicID);
+        }
     }
 }

@@ -5,16 +5,18 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     protected int counter = 0;
     protected final Map<Integer, Task> tasks = new HashMap<>();
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected final Map<Integer, Subtask> subtasks = new HashMap<>();
-
     protected final HistoryManager history = Managers.getDefaultHistory();
 
 
@@ -26,6 +28,38 @@ public class InMemoryTaskManager implements TaskManager {
         this.counter = value;
     }
 
+
+    private void calculateEpicTimeAndDuration(Subtask subtask) {
+        int epicID = subtask.getEpicID();
+        List<Subtask> ofEpicSubtasks = subtasks.values()
+                .stream()
+                .filter(task -> task.getEpicID() == epicID)
+                .collect(Collectors.toList());
+        Duration duration = ofEpicSubtasks
+                .stream()
+                .map(Subtask::getDuration)
+                .filter(Objects::nonNull)
+                .reduce(Duration.ZERO, Duration::plus);
+        List<Subtask> sortedSubtasks = ofEpicSubtasks
+                .stream()
+                .sorted(Comparator.comparing(Subtask::getStartTime))
+                .collect(Collectors.toList());
+        Instant startTime = null;
+        Instant endTimeNoDuration;
+        Instant endTime = null;
+        if (!sortedSubtasks.isEmpty()) {
+            startTime = sortedSubtasks.get(0).getStartTime();
+            endTimeNoDuration = sortedSubtasks.getLast().getStartTime();
+            endTime = endTimeNoDuration.plus(sortedSubtasks.getLast().getDuration());
+        }
+
+        Epic epic = epics.get(epicID);
+        epic.setStartTime(startTime);
+        epic.setDuration(duration);
+        epic.setEndTime(endTime);
+        epics.put(epicID, epic);
+
+    }
 
     @Override
     public void addSimpleTask(Task task) {
@@ -51,6 +85,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.addSubtaskID(newID);
             int epicID = subtask.getEpicID();
             correctEpicStatus(epicID);
+            calculateEpicTimeAndDuration(subtask);
         }
     }
 
@@ -101,6 +136,7 @@ public class InMemoryTaskManager implements TaskManager {
             history.remove(taskID);
             epic.getSubtaskIDs().remove(taskID);
             correctEpicStatus(epicID);
+            calculateEpicTimeAndDuration(subTask);
         }
     }
 
