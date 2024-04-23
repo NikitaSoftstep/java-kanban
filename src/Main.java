@@ -45,8 +45,9 @@ public class Main {
         System.out.println("4 - обновление задачи по ID:");
         System.out.println("5 - показать все задачи:");
         System.out.println("6 - удалить все задачи:");
-        System.out.println("7 - показать историю вызовов задач");
-        System.out.println("8 - выход из программы:");
+        System.out.println("7 - показать историю вызовов задач:");
+        System.out.println("8 - вывести задачи в порядке приоритетности:");
+        System.out.println("9 - выход из программы:");
     }
 
     public static void chooseAction(int action) throws IOException {
@@ -130,9 +131,14 @@ public class Main {
                 }
             }
             case 7 -> showHistory();
-            case 8 -> System.exit(0);
+            case 8 -> getPrioritizedTasks();
+            case 9 -> System.exit(0);
         }
 
+    }
+
+    private static void getPrioritizedTasks() {
+        System.out.println(fileBackedTaskManager.getPrioritizedTasks());
     }
 
     public static void createSimpleTask() {

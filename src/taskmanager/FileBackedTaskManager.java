@@ -289,4 +289,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
         return subtaskList;
     }
+
+    @Override
+    public TreeSet<Task> getPrioritizedTasks() {
+        TreeSet<Task> prioritizedTasks = super.getPrioritizedTasks();
+        save();
+        return prioritizedTasks;
+    }
 }

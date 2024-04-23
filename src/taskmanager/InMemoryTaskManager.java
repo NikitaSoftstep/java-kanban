@@ -1,6 +1,7 @@
 package taskmanager;
 
 import category.TaskStatus;
+import exceptions.TaskTimeOverlapException;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -18,6 +19,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected final Map<Integer, Subtask> subtasks = new HashMap<>();
     protected final HistoryManager history = Managers.getDefaultHistory();
+    protected final TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.
+            comparing(Task::getStartTime).thenComparing(Task::getDuration));
 
 
     protected int increaseCounter() {
@@ -26,6 +29,32 @@ public class InMemoryTaskManager implements TaskManager {
 
     protected void setCounter(Integer value) {
         this.counter = value;
+    }
+
+    public TreeSet<Task> getPrioritizedTasks() {
+        return prioritizedTasks;
+    }
+
+    private void checkTimeAndDuration(Task task) {
+        if (task.getStartTime() != null && task.getDuration() != null) {
+            addToPriorityList(task);
+        }
+    }
+
+    private void addToPriorityList(Task task) {
+        try {
+            if (isOverlapping(task)) {
+                throw new TaskTimeOverlapException("Задача пересекается по времени с другой: " + task.getTaskID());
+            } else {
+                prioritizedTasks.add(task);
+            }
+        } catch (TaskTimeOverlapException e) {
+            e.getStackTrace();
+        }
+    }
+
+    private boolean isOverlapping(Task task) {
+
     }
 
 
@@ -66,6 +95,7 @@ public class InMemoryTaskManager implements TaskManager {
         int newID = increaseCounter();
         task.setTaskID(newID);
         tasks.put(newID, task);
+        checkTimeAndDuration(task);
     }
 
     @Override
