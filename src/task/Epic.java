@@ -50,8 +50,8 @@ public class Epic extends Task {
             return String.format("%s,%s,%s,%s,%s,%s,%s", getTaskID(),
                     TaskTypes.EPIC,
                     getTitle(),
-                    getStatus(),
                     getDescription(),
+                    getStatus(),
                     formatter.format(local),
                     duration1);
         } else {
@@ -59,8 +59,8 @@ public class Epic extends Task {
             return String.format("%s,%s,%s,%s,%s,%s,%s", getTaskID(),
                     TaskTypes.EPIC,
                     getTitle(),
-                    getStatus(),
                     getDescription(),
+                    getStatus(),
                     "null",
                     "null");
         }

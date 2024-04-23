@@ -45,8 +45,8 @@ public class Subtask extends Task {
             return String.format("%s,%s,%s,%s,%s,%s,%s,%s", getTaskID(),
                     TaskTypes.SUBTASK,
                     getTitle(),
-                    getStatus(),
                     getDescription(),
+                    getStatus(),
                     formatter.format(local),
                     duration1,
                     epicID);
@@ -55,8 +55,8 @@ public class Subtask extends Task {
             return String.format("%s,%s,%s,%s,%s,%s,%s,%s", getTaskID(),
                     TaskTypes.SUBTASK,
                     getTitle(),
-                    getStatus(),
                     getDescription(),
+                    getStatus(),
                     "null",
                     "null",
                     epicID);

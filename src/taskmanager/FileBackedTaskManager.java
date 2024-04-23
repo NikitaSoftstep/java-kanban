@@ -19,6 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -28,12 +29,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.savePath = savePath;
     }
 
+
+
     private void save() {
+
         BufferedWriter br = null;
         try {
             br = new BufferedWriter(new FileWriter(savePath));
 
-            br.write("id,type,name,status,description,startTime,duration,epic" + "\n");
+            br.write("id,type,name,description,status,startTime,duration,epic" + "\n");
 
             List<Task> taskList = new ArrayList<>(tasks.values());
             for (Task task : taskList) {
@@ -92,8 +96,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     fileBackedTaskManager.setCounter(counter);
                     String type = split[1];
                     String title = split[2];
-                    String status = split[3];
-                    String description = split[4];
+                    String description = split[3];
+                    String status = split[4];
                     String startTime = !split[5].equals("null") ? split[5] : null;
                     String duration = !split[6].equals("null") ? split[6] : null;
                     String epicID = split.length == 8 ? split[7] : "0";
@@ -172,10 +176,33 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             System.out.println(e.getMessage());
             throw new TaskManagerIOException("Runtime exception: возможна ошибка поиска ресурсов или файла");
         }
+        TreeSet<Task> priorityTasks = collectPrioritezedTasks(fileBackedTaskManager.tasks,
+                fileBackedTaskManager.subtasks,
+                fileBackedTaskManager);
+        fileBackedTaskManager.setPrioritizedTasks(priorityTasks);
         return fileBackedTaskManager;
     }
 
 
+    public static TreeSet<Task> collectPrioritezedTasks(Map<Integer, Task> tasks,
+                                                        Map<Integer, Subtask> subtasks,
+                                                        FileBackedTaskManager manager) {
+        Set<Task> taskSet = tasks.values().stream()
+                .collect(Collectors.collectingAndThen(Collectors.toSet(),
+                        set -> set.isEmpty() ? Collections.emptySet() : set));
+        Set<Subtask> subtaskSet = subtasks.values().stream()
+                .collect(Collectors.collectingAndThen(Collectors.toSet(),
+                        set -> set.isEmpty() ? Collections.emptySet() : set));
+        TreeSet<Task> sortedTasks;
+        if (!subtaskSet.isEmpty() || !taskSet.isEmpty()) {
+            taskSet.addAll(subtaskSet);
+            taskSet.forEach(manager::checkTimeAndDuration);
+            sortedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+            sortedTasks.addAll(taskSet);
+        }
+
+        return new TreeSet<Task>(Comparator.comparing(Task::getStartTime));
+    }
     @Override
     public void addSimpleTask(Task task) {
         super.addSimpleTask(task);
@@ -290,10 +317,5 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return subtaskList;
     }
 
-    @Override
-    public TreeSet<Task> getPrioritizedTasks() {
-        TreeSet<Task> prioritizedTasks = super.getPrioritizedTasks();
-        save();
-        return prioritizedTasks;
-    }
+
 }

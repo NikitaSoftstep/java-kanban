@@ -115,8 +115,8 @@ public class Task {
             return String.format("%s,%s,%s,%s,%s,%s,%s", taskID,
                     TaskTypes.TASK,
                     title,
-                    status,
                     description,
+                    status,
                     formatter.format(local),
                     duration1);
         } else {
@@ -124,8 +124,8 @@ public class Task {
             return String.format("%s,%s,%s,%s,%s,%s,%s", taskID,
                     TaskTypes.TASK,
                     title,
-                    status,
                     description,
+                    status,
                     "null",
                     "null");
         }
