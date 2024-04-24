@@ -19,7 +19,7 @@ public class Task {
 
     private Instant endTime;
 
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public Task(String title, String description, TaskStatus status) {
         this.title = title;
