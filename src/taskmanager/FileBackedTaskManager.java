@@ -176,7 +176,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             System.out.println(e.getMessage());
             throw new TaskManagerIOException("Runtime exception: возможна ошибка поиска ресурсов или файла");
         }
-        TreeSet<Task> priorityTasks = collectPrioritezedTasks(fileBackedTaskManager.tasks,
+        TreeSet<Task> priorityTasks;
+        priorityTasks = collectPrioritezedTasks(fileBackedTaskManager.tasks,
                 fileBackedTaskManager.subtasks,
                 fileBackedTaskManager);
         fileBackedTaskManager.setPrioritizedTasks(priorityTasks);
@@ -187,21 +188,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public static TreeSet<Task> collectPrioritezedTasks(Map<Integer, Task> tasks,
                                                         Map<Integer, Subtask> subtasks,
                                                         FileBackedTaskManager manager) {
-        Set<Task> taskSet = tasks.values().stream()
-                .collect(Collectors.collectingAndThen(Collectors.toSet(),
-                        set -> set.isEmpty() ? Collections.emptySet() : set));
-        Set<Subtask> subtaskSet = subtasks.values().stream()
-                .collect(Collectors.collectingAndThen(Collectors.toSet(),
-                        set -> set.isEmpty() ? Collections.emptySet() : set));
-        TreeSet<Task> sortedTasks;
-        if (!subtaskSet.isEmpty() || !taskSet.isEmpty()) {
-            taskSet.addAll(subtaskSet);
-            taskSet.forEach(manager::checkTimeAndDuration);
-            sortedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
-            sortedTasks.addAll(taskSet);
-        }
+        TreeSet<Task> allTimeTasks = new TreeSet<>(Comparator.comparing(Task::getTaskID));
 
-        return new TreeSet<Task>(Comparator.comparing(Task::getStartTime));
+        tasks.values()
+                .stream()
+                .filter(task -> task.getStartTime() != null && task.getDuration() != null)
+                .forEach(allTimeTasks::add);
+
+        subtasks.values()
+                .stream()
+                .filter(subtask -> subtask.getStartTime() != null && subtask.getDuration() != null)
+                .forEach(allTimeTasks::add);
+
+        allTimeTasks.forEach(manager::checkTimeAndDuration);
+
+        if (!allTimeTasks.isEmpty()) {
+            return manager.getPrioritizedTasks();
+        }
+        return new TreeSet<>(Comparator.comparing(Task::getStartTime));
     }
     @Override
     public void addSimpleTask(Task task) {

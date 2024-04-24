@@ -1,6 +1,8 @@
 id,type,name,description,status,startTime,duration,epic
-1,TASK,первая,задача,NEW,null,null
-2,TASK,простая,задача,NEW,null,null
-3,TASK,ещё одна,задача,NEW,01.01.2001 10:00,15
+1,TASK,первая,задача,NEW,01.01.2001 10:00,5
+2,TASK,вторая,задача,NEW,01.01.2001 10:05,5
+3,TASK,третья,задача,NEW,01.01.2001 09:50,10
+4,TASK,четвертая,задача,NEW,01.01.2001 10:15,5
+5,TASK,пятая,задача,NEW,01.01.2001 09:00,5
 
 ids

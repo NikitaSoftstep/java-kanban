@@ -61,17 +61,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     public boolean isOverlapping(Task newTask) {
         Optional<Task> optTask = prioritizedTasks.stream().findAny();
-        boolean cantAdd;
+        boolean overlapping;
         if (optTask.isEmpty()) {
-            cantAdd = false;
+            overlapping = false;
         } else {
-            cantAdd = getPrioritizedTasks()
+            overlapping = prioritizedTasks
                     .stream()
                     .noneMatch(task -> newTask.getEndTime().isBefore(task.getStartTime())
                             || newTask.getStartTime().isAfter(task.getEndTime()));
-
+            // if (overlapping) overlapping = false;
         }
-        return cantAdd;
+        return overlapping;
     }
 
 

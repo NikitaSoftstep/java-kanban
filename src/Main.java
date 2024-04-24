@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 
 public class Main {
@@ -138,7 +139,8 @@ public class Main {
     }
 
     private static void getPrioritizedTasks() {
-        System.out.println(fileBackedTaskManager.getPrioritizedTasks());
+        Set<Task> sortedTasks = fileBackedTaskManager.getPrioritizedTasks();
+        sortedTasks.forEach(System.out::println);
     }
 
     public static void createSimpleTask() {
@@ -333,6 +335,6 @@ public class Main {
 
     public static void showHistory() {
         List<Task> tasksHistory = fileBackedTaskManager.getHistory();
-        System.out.println(tasksHistory);
+        tasksHistory.forEach(System.out::println);
     }
 }
