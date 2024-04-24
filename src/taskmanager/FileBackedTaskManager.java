@@ -19,7 +19,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -28,7 +27,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public FileBackedTaskManager(File savePath) {
         this.savePath = savePath;
     }
-
 
 
     private void save() {
@@ -149,28 +147,28 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             List<String> historyLines = Files.readAllLines(file.toPath());
             String lastLine = historyLines.getLast();
 
-                char firstChar = lastLine.charAt(0);
-                if (Character.isDigit(firstChar)) {
-                    String[] stringIds = lastLine.split(",");
-                    List<Integer> ids = new ArrayList<>();
-                    for (String id : stringIds) {
-                        ids.add(Integer.parseInt(id));
-                    }
-
-                    for (Integer id : ids) {
-                        if (fileBackedTaskManager.getSimpleTask(id) != null &&
-                                fileBackedTaskManager.getSimpleTask(id).getClass() == Task.class) {
-                            fileBackedTaskManager.history.add(fileBackedTaskManager.getSimpleTask(id));
-                        } else if (fileBackedTaskManager.getEpicTask(id) != null &&
-                                fileBackedTaskManager.getEpicTask(id).getClass() == Epic.class) {
-                            fileBackedTaskManager.history.add(fileBackedTaskManager.getEpicTask(id));
-                        } else if (fileBackedTaskManager.getSubtask(id) != null &&
-                                fileBackedTaskManager.getSubtask(id).getClass() == Subtask.class) {
-                            fileBackedTaskManager.history.add(fileBackedTaskManager.getSubtask(id));
-                        }
-                    }
-
+            char firstChar = lastLine.charAt(0);
+            if (Character.isDigit(firstChar)) {
+                String[] stringIds = lastLine.split(",");
+                List<Integer> ids = new ArrayList<>();
+                for (String id : stringIds) {
+                    ids.add(Integer.parseInt(id));
                 }
+
+                for (Integer id : ids) {
+                    if (fileBackedTaskManager.getSimpleTask(id) != null &&
+                            fileBackedTaskManager.getSimpleTask(id).getClass() == Task.class) {
+                        fileBackedTaskManager.history.add(fileBackedTaskManager.getSimpleTask(id));
+                    } else if (fileBackedTaskManager.getEpicTask(id) != null &&
+                            fileBackedTaskManager.getEpicTask(id).getClass() == Epic.class) {
+                        fileBackedTaskManager.history.add(fileBackedTaskManager.getEpicTask(id));
+                    } else if (fileBackedTaskManager.getSubtask(id) != null &&
+                            fileBackedTaskManager.getSubtask(id).getClass() == Subtask.class) {
+                        fileBackedTaskManager.history.add(fileBackedTaskManager.getSubtask(id));
+                    }
+                }
+
+            }
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -207,6 +205,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
         return new TreeSet<>(Comparator.comparing(Task::getStartTime));
     }
+
     @Override
     public void addSimpleTask(Task task) {
         super.addSimpleTask(task);
