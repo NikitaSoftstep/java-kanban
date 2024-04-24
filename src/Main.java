@@ -23,7 +23,7 @@ public class Main {
 
     static TaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(savedManager);
 
-    static public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
 
     public static void main(String[] args) throws IOException {
