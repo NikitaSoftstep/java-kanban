@@ -5,7 +5,6 @@ import task.Subtask;
 import task.Task;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 public interface TaskManager {
     void addSimpleTask(Task task);
