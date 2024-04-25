@@ -31,14 +31,19 @@ public class InMemoryTaskManager implements TaskManager {
         this.counter = value;
     }
 
-    public TreeSet<Task> getPrioritizedTasks() {
-        return prioritizedTasks;
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
     }
 
-    public void setPrioritizedTasks(TreeSet<Task> priorityTasks) {
+    protected void setPrioritizedTasks(TreeSet<Task> priorityTasks) {
         if (!priorityTasks.isEmpty()) {
             prioritizedTasks = priorityTasks;
         }
+    }
+
+
+    public void removeIfPresentFromPriority(Task task) {
+        prioritizedTasks.remove(task);
     }
 
     public void checkTimeAndDuration(Task task) {
@@ -52,44 +57,48 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public void addToPriorityList(Task task) throws TaskTimeOverlapException {
-        if (isOverlapping(task)) {
-            throw new TaskTimeOverlapException("Задача пересекается по времени с другой: ");
-        } else {
+        if (isNotOverlapping(task)) {
             prioritizedTasks.add(task);
+        } else {
+            throw new TaskTimeOverlapException("Задача пересекается по времени с другой: ");
         }
     }
 
-    public boolean isOverlapping(Task newTask) {
-        Optional<Task> optTask = prioritizedTasks.stream().findAny();
-        boolean overlapping;
-        if (optTask.isEmpty()) {
-            overlapping = false;
+    public boolean isNotOverlapping(Task newTask) {
+        boolean notOverlapping;
+        if (prioritizedTasks.isEmpty()) {
+            notOverlapping = true;
         } else {
-            overlapping = prioritizedTasks
+            notOverlapping = prioritizedTasks
                     .stream()
-                    .noneMatch(task -> newTask.getEndTime().isBefore(task.getStartTime())
+                    .allMatch(task -> newTask.getEndTime().isBefore(task.getStartTime())
                             || newTask.getStartTime().isAfter(task.getEndTime()));
             // if (overlapping) overlapping = false;
         }
-        return overlapping;
+        return notOverlapping;
     }
 
+    private void checkEpicTimeAndStatus(Subtask subtask) {
+        calculateEpicTimeAndDuration(subtask);
+        correctEpicStatus(subtask.getEpicID());
+    }
 
-    public void calculateEpicTimeAndDuration(Subtask subtask) {
+    private void calculateEpicTimeAndDuration(Subtask subtask) {
+
         int epicID = subtask.getEpicID();
-        List<Subtask> ofEpicSubtasks = subtasks.values()
+        List<Subtask> epicSubtasks = epics.get(epicID).getSubtaskIDs()
                 .stream()
-                .filter(task -> task.getEpicID() == epicID)
-                .collect(Collectors.toList());
-        Duration duration = ofEpicSubtasks
+                .map(subtasks::get)
+                .toList();
+        Duration duration = epicSubtasks
                 .stream()
                 .map(Subtask::getDuration)
                 .filter(Objects::nonNull)
                 .reduce(Duration.ZERO, Duration::plus);
-        List<Subtask> sortedSubtasks = ofEpicSubtasks
+        List<Subtask> sortedSubtasks = epicSubtasks
                 .stream()
                 .sorted(Comparator.comparing(Subtask::getStartTime))
-                .collect(Collectors.toList());
+                .toList();
         Instant startTime = null;
         Instant endTimeNoDuration;
         Instant endTime = null;
@@ -131,8 +140,7 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epics.get(subtask.getEpicID());
             epic.addSubtaskID(newID);
             int epicID = subtask.getEpicID();
-            correctEpicStatus(epicID);
-            calculateEpicTimeAndDuration(subtask);
+            checkEpicTimeAndStatus(subtask);
             checkTimeAndDuration(subtask);
         }
     }
@@ -190,8 +198,7 @@ public class InMemoryTaskManager implements TaskManager {
                 prioritizedTasks.removeIf(task -> task.getTaskID() == taskID);
             }
             epic.getSubtaskIDs().remove(taskID);
-            correctEpicStatus(epicID);
-            calculateEpicTimeAndDuration(subTask);
+            checkEpicTimeAndStatus(subTask);
         }
     }
 
@@ -199,6 +206,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateSimpleTask(Task task) {
         if (tasks.containsKey(task.getTaskID())) {
             tasks.put(task.getTaskID(), task);
+            checkTimeAndDuration(task);
         }
     }
 
@@ -220,7 +228,8 @@ public class InMemoryTaskManager implements TaskManager {
             int epicID = prevTask.getEpicID();
             subtask.setEpicID(epicID);
             subtasks.put(taskID, subtask);
-            correctEpicStatus(epicID);
+            checkEpicTimeAndStatus(subtask);
+            checkTimeAndDuration(subtask);
         }
     }
 

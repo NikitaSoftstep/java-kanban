@@ -7,17 +7,17 @@ import java.time.format.DateTimeFormatter;
 
 
 public class Task {
-    private String title;
-    private String description;
-    private int taskID;
-    private TaskStatus status;
+    protected String title;
+    protected String description;
+    protected int taskID;
+    protected TaskStatus status;
     private TaskTypes taskType = TaskTypes.TASK;
 
-    private Duration duration;
+    protected Duration duration;
 
-    private Instant startTime;
+    protected Instant startTime;
 
-    private Instant endTime;
+    protected Instant endTime;
 
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 

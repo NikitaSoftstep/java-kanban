@@ -8,10 +8,8 @@ import java.util.ArrayList;
 public class Epic extends Task {
 
     private TaskTypes taskType = TaskTypes.EPIC;
-    private TaskStatus status;
     private ArrayList<Integer> subtaskIDs = new ArrayList<>();
 
-    private Instant endTime;
 
     public Epic(String title, String description, TaskStatus status) {
         super(title, description, status);

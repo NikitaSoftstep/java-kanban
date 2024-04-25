@@ -46,8 +46,9 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
-    TreeSet<Task> getPrioritizedTasks();
+    List<Task> getPrioritizedTasks();
 
+    void removeIfPresentFromPriority(Task task);
 
-
+    void checkTimeAndDuration(Task task);
 }

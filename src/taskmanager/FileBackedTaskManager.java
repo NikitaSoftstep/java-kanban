@@ -201,7 +201,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         allTimeTasks.forEach(manager::checkTimeAndDuration);
 
         if (!allTimeTasks.isEmpty()) {
-            return manager.getPrioritizedTasks();
+            List<Task> list = manager.getPrioritizedTasks();
+            TreeSet<Task> treeSet = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+            treeSet.addAll(list);
+            return treeSet;
         }
         return new TreeSet<>(Comparator.comparing(Task::getStartTime));
     }

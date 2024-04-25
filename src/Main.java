@@ -139,7 +139,7 @@ public class Main {
     }
 
     private static void getPrioritizedTasks() {
-        Set<Task> sortedTasks = fileBackedTaskManager.getPrioritizedTasks();
+        List<Task> sortedTasks = fileBackedTaskManager.getPrioritizedTasks();
         sortedTasks.forEach(System.out::println);
     }
 
@@ -264,14 +264,31 @@ public class Main {
         System.out.println("Введите статус задачи: 1 - in progress, 2 - done");
         TaskStatus status = TaskStatus.NEW;
         switch (scanner.nextInt()) {
-            case 1 -> {
-                status = TaskStatus.IN_PROGRESS;
-            }
-            case 2 -> {
-                status = TaskStatus.DONE;
-            }
+            case 1 -> status = TaskStatus.IN_PROGRESS;
+            case 2 -> status = TaskStatus.DONE;
         }
-        Task task = new Task(title, description, status);
+        scanner.nextLine();
+        Task task;
+        System.out.println("Хотите обновить время начала и продолжительность задачи: да/нет");
+        String response = scanner.nextLine();
+        if (response.equals("да")) {
+            fileBackedTaskManager
+                    .removeIfPresentFromPriority(fileBackedTaskManager.getSimpleTask(taskID));
+
+            System.out.println("Введите время начала задачи в формате \"дд.мм.гггг чч:мм\":");
+            String startTime = scanner.nextLine();
+            System.out.println("Введите продолжительность задачи (мин): ");
+            int duration = scanner.nextInt();
+            scanner.nextLine();
+            LocalDateTime local = LocalDateTime.parse(startTime, formatter);
+            ZoneId zoneID = ZoneId.of("UTC");
+            ZonedDateTime zonedDateTime = local.atZone(zoneID);
+            Instant instantTime = zonedDateTime.toInstant();
+            Duration dur = Duration.ofMinutes(duration);
+            task = new Task(title, description, status, instantTime, dur);
+        } else {
+            task = new Task(title, description, status);
+        }
         task.setTaskID(taskID);
         fileBackedTaskManager.updateSimpleTask(task);
     }
@@ -304,7 +321,28 @@ public class Main {
             case 1 -> status = TaskStatus.IN_PROGRESS;
             case 2 -> status = TaskStatus.DONE;
         }
-        Subtask subtask = new Subtask(title, description, status);
+        scanner.nextLine();
+        Subtask subtask;
+        System.out.println("Хотите обновить время начала и продолжительность задачи: да/нет");
+        String response = scanner.nextLine();
+        if (response.equals("да")) {
+            fileBackedTaskManager
+                    .removeIfPresentFromPriority(fileBackedTaskManager.getSubtask(taskID));
+            System.out.println("Введите время начала задачи в формате \"дд.мм.гггг чч:мм\":");
+            String startTime = scanner.nextLine();
+            System.out.println("Введите продолжительность задачи (мин): ");
+            int duration = scanner.nextInt();
+            scanner.nextLine();
+            LocalDateTime local = LocalDateTime.parse(startTime, formatter);
+            ZoneId zoneID = ZoneId.of("UTC");
+            ZonedDateTime zonedDateTime = local.atZone(zoneID);
+            Instant instantTime = zonedDateTime.toInstant();
+            Duration dur = Duration.ofMinutes(duration);
+            subtask = new Subtask(title, description, status, instantTime, dur);
+        } else {
+            subtask = new Subtask(title, description, status);
+
+        }
         subtask.setTaskID(taskID);
         fileBackedTaskManager.updateSubtask(subtask);
     }
