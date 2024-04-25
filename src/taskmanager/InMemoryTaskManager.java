@@ -64,7 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public boolean isNotOverlapping(Task newTask) {
+    private boolean isNotOverlapping(Task newTask) {
         boolean notOverlapping;
         if (prioritizedTasks.isEmpty()) {
             notOverlapping = true;
