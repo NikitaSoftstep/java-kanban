@@ -49,5 +49,5 @@ public interface TaskManager {
 
     void removeIfPresentFromPriority(Task task);
 
-    void checkTimeAndDuration(Task task);
+    boolean checkTimeAndDuration(Task task);
 }

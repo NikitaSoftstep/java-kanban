@@ -273,7 +273,6 @@ public class Main {
         if (response.equals("да")) {
             fileBackedTaskManager
                     .removeIfPresentFromPriority(fileBackedTaskManager.getSimpleTask(taskID));
-
             System.out.println("Введите время начала задачи в формате \"дд.мм.гггг чч:мм\":");
             String startTime = scanner.nextLine();
             System.out.println("Введите продолжительность задачи (мин): ");
@@ -286,8 +285,14 @@ public class Main {
             Duration dur = Duration.ofMinutes(duration);
             task = new Task(title, description, status, instantTime, dur);
         } else {
-            task = new Task(title, description, status);
+            Task previousTask = fileBackedTaskManager.getSimpleTask(taskID);
+            if (previousTask.getStartTime() != null && previousTask.getDuration() != null) {
+                task = new Task(title, description, status, previousTask.getStartTime(), previousTask.getDuration());
+            } else {
+                task = new Task(title, description, status);
+            }
         }
+
         task.setTaskID(taskID);
         fileBackedTaskManager.updateSimpleTask(task);
     }
@@ -347,15 +352,18 @@ public class Main {
     }
 
     public static void showSimpleTasks() {
-        System.out.println(fileBackedTaskManager.getSimpleTasks());
+        fileBackedTaskManager.getSimpleTasks()
+                .forEach(System.out::println);
     }
 
     public static void showEpicTasks() {
-        System.out.println(fileBackedTaskManager.getEpicTasks());
+        fileBackedTaskManager.getEpicTasks()
+                .forEach(System.out::println);
     }
 
     public static void showSubtasks() {
-        System.out.println(fileBackedTaskManager.getSubtasks());
+        fileBackedTaskManager.getSubtasks()
+                .forEach(System.out::println);
     }
 
     public static void deleteSimpleTasks() throws IOException {

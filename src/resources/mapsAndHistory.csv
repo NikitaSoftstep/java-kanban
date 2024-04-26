@@ -1,7 +1,6 @@
 id,type,name,description,status,startTime,duration,epic
-1,TASK,вторая,задача,IN_PROGRESS,01.01.2050 15:00,15
-2,EPIC,эпическая,задача,DONE,null,null
-3,SUBTASK,хитрая,подзадача,DONE,01.01.2050 15:00,2,2
+1,TASK,обновленная ,ой,DONE,01.01.2001 10:00,5
+2,TASK,вторая,задача,NEW,01.01.2001 10:20,20
 
 ids
-3,
+1,2,
