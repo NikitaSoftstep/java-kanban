@@ -2,18 +2,67 @@ package task;
 
 import category.TaskStatus;
 
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+
 
 public class Task {
-    private String title;
-    private String description;
-    private int taskID;
-    private TaskStatus status;
+    protected String title;
+    protected String description;
+    protected int taskID;
+    protected TaskStatus status;
     private TaskTypes taskType = TaskTypes.TASK;
+
+    protected Duration duration;
+
+    protected Instant startTime;
+
+    protected Instant endTime;
+
+    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public Task(String title, String description, TaskStatus status) {
         this.title = title;
         this.description = description;
         this.status = status;
+    }
+
+    public Task(String title,
+                String description,
+                TaskStatus status,
+                Instant startTime,
+                Duration duration) {
+        this.description = description;
+        this.title = title;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public Instant getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Instant startTime) {
+        this.startTime = startTime;
+    }
+
+
+    public Instant getEndTime() {
+        endTime = startTime.plus(duration);
+        return endTime;
+    }
+
+    public void setEndTime() {
+        endTime = startTime.plus(duration);
     }
 
     public int getTaskID() {
@@ -58,12 +107,28 @@ public class Task {
 
     @Override
     public String toString() {
-        // id,type,name,status,description,epic
-        return String.format("%s,%s,%s,%s,%s,", taskID,
-                TaskTypes.TASK,
-                title,
-                status,
-                description);
+        ZonedDateTime zone;
+        int duration1;
+        if (!(startTime == null) && !(duration == null)) {
+            LocalDateTime local = LocalDateTime.ofInstant(startTime, ZoneOffset.UTC);
+            duration1 = (int) duration.toMinutes();
+            return String.format("%s,%s,%s,%s,%s,%s,%s", taskID,
+                    TaskTypes.TASK,
+                    title,
+                    description,
+                    status,
+                    formatter.format(local),
+                    duration1);
+        } else {
+            // id,type,name,status,description,epic
+            return String.format("%s,%s,%s,%s,%s,%s,%s", taskID,
+                    TaskTypes.TASK,
+                    title,
+                    description,
+                    status,
+                    "null",
+                    "null");
+        }
     }
 
     @Override

@@ -9,6 +9,9 @@ import task.TaskTypes;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import java.io.BufferedWriter;
@@ -25,12 +28,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.savePath = savePath;
     }
 
+
     private void save() {
+
         BufferedWriter br = null;
         try {
             br = new BufferedWriter(new FileWriter(savePath));
 
-            br.write("id,type,name,status,description,epic" + "\n");
+            br.write("id,type,name,description,status,startTime,duration,epic" + "\n");
 
             List<Task> taskList = new ArrayList<>(tasks.values());
             for (Task task : taskList) {
@@ -89,25 +94,42 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     fileBackedTaskManager.setCounter(counter);
                     String type = split[1];
                     String title = split[2];
-                    String status = split[3];
-                    String description = split[4];
-                    String epicID = split.length == 6 ? split[5] : "0";
+                    String description = split[3];
+                    String status = split[4];
+                    String startTime = !split[5].equals("null") ? split[5] : null;
+                    String duration = !split[6].equals("null") ? split[6] : null;
+                    String epicID = split.length == 8 ? split[7] : "0";
 
                     if (type.equals(TaskTypes.TASK.toString())) {
                         Task task = new Task(title, description, TaskStatus.valueOf(status));
                         task.setTaskID(Integer.parseInt(id));
                         task.setType(TaskTypes.valueOf(type));
+                        if (startTime != null) {
+                            LocalDateTime time = LocalDateTime.parse(startTime, Task.formatter);
+                            task.setStartTime(time.toInstant(ZoneOffset.UTC));
+                            task.setDuration(Duration.ofMinutes(Integer.parseInt(duration)));
+                        }
                         fileBackedTaskManager.tasks.put(Integer.parseInt(id), task);
                     } else if (type.equals(TaskTypes.EPIC.toString())) {
                         Epic epic = new Epic(title, description, TaskStatus.valueOf(status));
                         epic.setTaskID(Integer.parseInt(id));
                         epic.setType(TaskTypes.valueOf(type));
+                        if (startTime != null) {
+                            LocalDateTime time = LocalDateTime.parse(startTime, Task.formatter);
+                            epic.setStartTime(time.toInstant(ZoneOffset.UTC));
+                            epic.setDuration(Duration.ofMinutes(Integer.parseInt(duration)));
+                        }
                         fileBackedTaskManager.epics.put(Integer.parseInt(id), epic);
                     } else if (type.equals(TaskTypes.SUBTASK.toString())) {
                         Subtask subtask = new Subtask(title, description, TaskStatus.valueOf(status));
                         subtask.setTaskID(Integer.parseInt(id));
                         subtask.setType(TaskTypes.valueOf(type));
                         subtask.setEpicID(Integer.parseInt(epicID));
+                        if (startTime != null) {
+                            LocalDateTime time = LocalDateTime.parse(startTime, Task.formatter);
+                            subtask.setStartTime(time.toInstant(ZoneOffset.UTC));
+                            subtask.setDuration(Duration.ofMinutes(Integer.parseInt(duration)));
+                        }
                         fileBackedTaskManager.subtasks.put(Integer.parseInt(id), subtask);
 
 
@@ -124,6 +146,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
             List<String> historyLines = Files.readAllLines(file.toPath());
             String lastLine = historyLines.getLast();
+
             char firstChar = lastLine.charAt(0);
             if (Character.isDigit(firstChar)) {
                 String[] stringIds = lastLine.split(",");
@@ -146,13 +169,45 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
 
             }
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
             throw new TaskManagerIOException("Runtime exception: возможна ошибка поиска ресурсов или файла");
         }
+        TreeSet<Task> priorityTasks;
+        priorityTasks = collectPrioritezedTasks(fileBackedTaskManager.tasks,
+                fileBackedTaskManager.subtasks,
+                fileBackedTaskManager);
+        fileBackedTaskManager.setPrioritizedTasks(priorityTasks);
         return fileBackedTaskManager;
     }
 
+
+    public static TreeSet<Task> collectPrioritezedTasks(Map<Integer, Task> tasks,
+                                                        Map<Integer, Subtask> subtasks,
+                                                        FileBackedTaskManager manager) {
+        TreeSet<Task> allTimeTasks = new TreeSet<>(Comparator.comparing(Task::getTaskID));
+
+        tasks.values()
+                .stream()
+                .filter(task -> task.getStartTime() != null && task.getDuration() != null)
+                .forEach(allTimeTasks::add);
+
+        subtasks.values()
+                .stream()
+                .filter(subtask -> subtask.getStartTime() != null && subtask.getDuration() != null)
+                .forEach(allTimeTasks::add);
+
+        allTimeTasks.forEach(manager::checkTimeAndDuration);
+
+        if (!allTimeTasks.isEmpty()) {
+            List<Task> list = manager.getPrioritizedTasks();
+            TreeSet<Task> treeSet = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+            treeSet.addAll(list);
+            return treeSet;
+        }
+        return new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    }
 
     @Override
     public void addSimpleTask(Task task) {
@@ -267,4 +322,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
         return subtaskList;
     }
+
+
 }

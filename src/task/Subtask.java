@@ -2,6 +2,8 @@ package task;
 
 import category.TaskStatus;
 
+import java.time.*;
+
 public class Subtask extends Task {
 
     private int epicID;
@@ -10,6 +12,10 @@ public class Subtask extends Task {
 
     public Subtask(String title, String description, TaskStatus status) {
         super(title, description, status);
+    }
+
+    public Subtask(String title, String description, TaskStatus status, Instant startTime, Duration duration) {
+        super(title, description, status, startTime, duration);
     }
 
     public int getEpicID() {
@@ -31,11 +37,29 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return String.format("%s,%s,%s,%s,%s,%s", getTaskID(),
-                TaskTypes.SUBTASK,
-                getTitle(),
-                getStatus(),
-                getDescription(),
-                getEpicID());
+        ZonedDateTime zone;
+        int duration1;
+        if (!(getStartTime() == null) && !(getDuration() == null)) {
+            LocalDateTime local = LocalDateTime.ofInstant(getStartTime(), ZoneOffset.UTC);
+            duration1 = (int) getDuration().toMinutes();
+            return String.format("%s,%s,%s,%s,%s,%s,%s,%s", getTaskID(),
+                    TaskTypes.SUBTASK,
+                    getTitle(),
+                    getDescription(),
+                    getStatus(),
+                    formatter.format(local),
+                    duration1,
+                    epicID);
+        } else {
+            // id,type,name,status,description,epic
+            return String.format("%s,%s,%s,%s,%s,%s,%s,%s", getTaskID(),
+                    TaskTypes.SUBTASK,
+                    getTitle(),
+                    getDescription(),
+                    getStatus(),
+                    "null",
+                    "null",
+                    epicID);
+        }
     }
 }

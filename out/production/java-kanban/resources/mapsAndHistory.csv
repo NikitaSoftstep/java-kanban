@@ -1,8 +1,6 @@
-id,type,name,status,description,epic
-16,TASK,мать,NEW,и дочь,
-18,EPIC,озеро,DONE,лохнес,
-15,EPIC,тец,DONE,и сын,
-17,SUBTASK,моря,DONE,и океаны,15
-19,SUBTASK,оо,NEW,оооо,18
+id,type,name,description,status,startTime,duration,epic
+1,TASK,вторая,задача,IN_PROGRESS,01.01.2050 15:00,15
+2,EPIC,эпическая,задача,NEW,01.01.2010 10:00,5
+3,SUBTASK,подзадача,ой,NEW,01.01.2010 10:00,5,2
 
 ids

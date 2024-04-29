@@ -8,6 +8,9 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import static org.junit.Assert.assertTrue;
 
 abstract class TaskManagerTest<T extends TaskManager> {
@@ -45,7 +48,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         epic.setStatus(TaskStatus.NEW);
         taskManager.addEpicTask(epic);
         int epicID = epic.getTaskID();
-        Subtask tsk = new Subtask("заголовок", "описание", TaskStatus.NEW);
+        Subtask tsk = new Subtask("заголовок", "описание", TaskStatus.NEW, Instant.now(), Duration.ofMinutes(10));
         tsk.setStatus(TaskStatus.NEW);
         tsk.setEpicID(epicID);
         taskManager.addSubtask(tsk);
