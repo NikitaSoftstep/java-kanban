@@ -1,11 +1,14 @@
 
+import Handlers.*;
 import category.TaskStatus;
+import com.sun.net.httpserver.HttpServer;
 import task.Epic;
 import task.Subtask;
 import task.Task;
 import taskmanager.FileBackedTaskManager;
 import taskmanager.TaskManager;
 
+import java.net.InetSocketAddress;
 import java.time.*;
 
 import java.io.File;
@@ -15,7 +18,7 @@ import java.util.List;
 import java.util.Scanner;
 
 
-public class Main {
+public class HttpTaskServer {
     static Scanner scanner = new Scanner(System.in);
 
     static File savedManager = new File("src/resources/mapsAndHistory.csv");
@@ -23,10 +26,30 @@ public class Main {
     static TaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(savedManager);
 
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    static HttpServer httpServer;
+
+    {
+        try {
+            httpServer = HttpServer.create(new InetSocketAddress(8080), 0);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     public static void main(String[] args) throws IOException {
+        createServerHandlers();
         startApp();
+
+    }
+
+    private static void createServerHandlers() {
+
+        httpServer.createContext("/tasks", new TasksHandler(fileBackedTaskManager));
+        httpServer.createContext("/subtasks", new SubtasksHandler(fileBackedTaskManager));
+        httpServer.createContext("/epics", new EpicsHandler(fileBackedTaskManager));
+        httpServer.createContext("/history", new HistoryHandler(fileBackedTaskManager));
+        httpServer.createContext("/prioritized", new PrioritizedHandler(fileBackedTaskManager));
     }
 
     public static void startApp() throws IOException {
