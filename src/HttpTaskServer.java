@@ -6,6 +6,7 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 import taskmanager.FileBackedTaskManager;
+import taskmanager.Managers;
 import taskmanager.TaskManager;
 
 import java.net.InetSocketAddress;
@@ -26,30 +27,38 @@ public class HttpTaskServer {
     static TaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(savedManager);
 
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-    static HttpServer httpServer;
+    private static final int PORT = 8080;
+    private static HttpServer httpServer;
 
-    {
+
+
+
+    public static void main(String[] args) throws IOException {
+
+        createServer();
+        startApp();
+        stopServer();
+    }
+
+    private static void createServer() {
         try {
-            httpServer = HttpServer.create(new InetSocketAddress(8080), 0);
+            httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
+            createServerHandlers(httpServer);
+            httpServer.start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-
-    public static void main(String[] args) throws IOException {
-        createServerHandlers();
-        startApp();
-
+    private static void stopServer() {
+        httpServer.stop(1);
     }
-
-    private static void createServerHandlers() {
-
-        httpServer.createContext("/tasks", new TasksHandler(fileBackedTaskManager));
-        httpServer.createContext("/subtasks", new SubtasksHandler(fileBackedTaskManager));
-        httpServer.createContext("/epics", new EpicsHandler(fileBackedTaskManager));
-        httpServer.createContext("/history", new HistoryHandler(fileBackedTaskManager));
-        httpServer.createContext("/prioritized", new PrioritizedHandler(fileBackedTaskManager));
+    private static void createServerHandlers(HttpServer server) {
+        server.createContext("/tasks", new TasksHandler(fileBackedTaskManager));
+        server.createContext("/subtasks", new SubtasksHandler(fileBackedTaskManager));
+        server.createContext("/epics", new EpicsHandler(fileBackedTaskManager));
+        server.createContext("/history", new HistoryHandler(fileBackedTaskManager));
+        server.createContext("/prioritized", new PrioritizedHandler(fileBackedTaskManager));
     }
 
     public static void startApp() throws IOException {

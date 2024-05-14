@@ -50,4 +50,6 @@ public interface TaskManager {
     void removeIfPresentFromPriority(Task task);
 
     boolean checkTimeAndDuration(Task task);
+
+    boolean isNotOverlapping(Task newTask);
 }
