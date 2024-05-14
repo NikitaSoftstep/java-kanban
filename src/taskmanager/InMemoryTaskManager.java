@@ -129,13 +129,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addSimpleTask(Task task) {
-
+    public Task addSimpleTask(Task task) {
         int newID = increaseCounter();
         task.setTaskID(newID);
         if (checkTimeAndDuration(task)) {
             tasks.put(newID, task);
+            return task;
         }
+        return null;
     }
 
     @Override
@@ -146,7 +147,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addSubtask(Subtask subtask) {
+    public Subtask addSubtask(Subtask subtask) {
         if (epics.containsKey(subtask.getEpicID())) {
             int newID = increaseCounter();
             subtask.setTaskID(newID);
@@ -156,8 +157,10 @@ public class InMemoryTaskManager implements TaskManager {
                 epic.addSubtaskID(newID);
                 int epicID = subtask.getEpicID();
                 checkEpicTimeAndStatus(subtask);
+                return subtask;
             }
         }
+        return null;
     }
 
     @Override
@@ -218,28 +221,32 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSimpleTask(Task task) {
+    public Task updateSimpleTask(Task task) {
         if (tasks.containsKey(task.getTaskID())) {
             if (checkTimeAndDuration(task)) {
                 tasks.put(task.getTaskID(), task);
+                return task;
             } else {
                 System.out.println("Введите другое время начала и/или продолжительность");
             }
         }
+        return null;
     }
 
     @Override
-    public void updateEpicTask(Epic epic) {
+    public Epic updateEpicTask(Epic epic) {
         if (epics.containsKey(epic.getTaskID())) {
             Epic prevEpic = epics.get(epic.getTaskID());
             TaskStatus status = prevEpic.getStatus();
             epic.setStatus(status);
             epics.put(epic.getTaskID(), epic);
+            return epic;
         }
+        return null;
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
+    public Subtask updateSubtask(Subtask subtask) {
         if (subtasks.containsKey(subtask.getTaskID())) {
             int taskID = subtask.getTaskID();
             Subtask prevTask = subtasks.get(taskID);
@@ -248,10 +255,12 @@ public class InMemoryTaskManager implements TaskManager {
             if (checkTimeAndDuration(subtask)) {
                 subtasks.put(taskID, subtask);
                 checkEpicTimeAndStatus(subtask);
+                return subtask;
             } else {
                 System.out.println("Введите другое время начала и/или продолжительность");
             }
         }
+        return null;
     }
 
     protected void correctEpicStatus(int epicID) {

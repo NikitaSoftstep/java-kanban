@@ -2,6 +2,7 @@ package Handlers;
 
 import Handlers.TypeTokens.TasksToken;
 import category.TaskStatus;
+import com.google.gson.*;
 import com.google.gson.internal.bind.util.ISO8601Utils;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -18,9 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 public class TasksHandler implements HttpHandler {
 
     TaskManager manager;
@@ -33,37 +31,92 @@ public class TasksHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) {
         try {
-        Gson gson = baseHttpHandler.createGson();
-        String method = exchange.getRequestMethod();
-        int pathLength = baseHttpHandler.getPathLength(exchange);
-        System.out.println(pathLength);
+            Gson gson = baseHttpHandler.createGson();
+            String method = exchange.getRequestMethod();
+            int pathLength = baseHttpHandler.getPathLength(exchange);
 
 
             if (method.equals("GET")) {
                 switch (pathLength) {
                     case 2 -> {
                         List<Task> tasks = manager.getSimpleTasks();
-                        System.out.println(tasks);
-                        System.out.println("отправили запрос на sendtext");
                         if (tasks == null) {
-                            System.out.println("ой, у нас налл!");
-                            baseHttpHandler.sendNotFound(exchange);
+                            baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
                             return;
                         }
 
                         String tasksJson = gson.toJson(tasks);
                         baseHttpHandler.sendText(exchange, tasksJson);
-                        System.out.println("или здесь?");
                     }
                     case 3 -> {
                         Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
                         if (id.isEmpty()) {
-                            baseHttpHandler.sendNotFound(exchange);
+                            baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
                             return;
+                        } else {
+                            Task newTask = manager.getSimpleTask(id.get());
+                            if (newTask == null) {
+                                baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
+                                return;
+                            }
                         }
                         Task task = manager.getSimpleTask(id.get());
                         String taskJson = gson.toJson(task);
                         baseHttpHandler.sendText(exchange, taskJson);
+                    }
+                }
+            } else if (method.equals("POST")) {
+                InputStream input = exchange.getRequestBody();
+                String stringInput = new String(input.readAllBytes(), StandardCharsets.UTF_8);
+                JsonElement element = JsonParser.parseString(stringInput);
+                if (!element.isJsonObject()) {
+                    baseHttpHandler.sendNotAcceptable(exchange, "Это не Json объект");
+                    return;
+                }
+                JsonObject jsonObject = element.getAsJsonObject();
+                Task taskFromJson = gson.fromJson(jsonObject, Task.class);
+                switch (pathLength) {
+                    case 2 -> {
+                        Task newTask = manager.addSimpleTask(taskFromJson);
+                        if (newTask == null) {
+                            baseHttpHandler.sendNotAcceptable(exchange, "Задача пересекается по времени");
+                        } else {
+                            try (OutputStream os = exchange.getResponseBody()) {
+                                exchange.sendResponseHeaders(201, 0);
+                            }
+                        }
+                    }
+                    case 3 -> {
+                        Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
+                        if (id.isPresent()) {
+                            Task task2 = manager.updateSimpleTask(taskFromJson);
+                            if (task2 != null) {
+                                try (OutputStream os = exchange.getResponseBody()) {
+                                    exchange.sendResponseHeaders(201, 0);
+                                }
+                            } else {
+                                baseHttpHandler.sendNotAcceptable(exchange, "Возникло пересечение");
+                            }
+                            baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
+                        }
+                    }
+                }
+            } else if (method.equals("DELETE")) {
+                switch (pathLength) {
+                    case 2 -> {
+                        manager.deleteSimpleTasks();
+                        baseHttpHandler.sendText(exchange, "Задачи удалены");
+                    }
+                    case 3 -> {
+                        Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
+                        if (id.isPresent()) {
+                            if (manager.getSimpleTask(id.get()) != null) {
+                                manager.deleteSimpleTask(id.get());
+                                try (OutputStream os = exchange.getResponseBody()) {
+                                    exchange.sendResponseHeaders(201, 0);
+                                }
+                            }
+                        }
                     }
                 }
             } else {

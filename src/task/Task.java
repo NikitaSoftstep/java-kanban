@@ -39,6 +39,7 @@ public class Task {
         this.status = status;
         this.startTime = startTime;
         this.duration = duration;
+        this.endTime = startTime.plus(duration);
     }
 
     public Duration getDuration() {

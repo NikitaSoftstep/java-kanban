@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
-    void addSimpleTask(Task task);
+    Task addSimpleTask(Task task);
 
     void addEpicTask(Epic epic);
 
-    void addSubtask(Subtask subtask);
+    Subtask addSubtask(Subtask subtask);
 
     Task getSimpleTask(int taskID);
 
@@ -25,11 +25,11 @@ public interface TaskManager {
 
     void deleteSubtask(int taskID);
 
-    void updateSimpleTask(Task task);
+    Task updateSimpleTask(Task task);
 
-    void updateEpicTask(Epic epic);
+    Epic updateEpicTask(Epic epic);
 
-    void updateSubtask(Subtask subtask);
+    Subtask updateSubtask(Subtask subtask);
 
     ArrayList<Task> getSimpleTasks();
 

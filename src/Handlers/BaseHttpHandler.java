@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 public class BaseHttpHandler {
 
@@ -29,7 +28,6 @@ public class BaseHttpHandler {
 
 
     protected void sendText(HttpExchange exchange, String text) throws IOException {
-        System.out.println("теперь мы в методе sendTExt");
 
         try (OutputStream os = exchange.getResponseBody()) {
             exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
@@ -39,21 +37,23 @@ public class BaseHttpHandler {
         exchange.close();
     }
 
-    protected void sendNotFound(HttpExchange exchange) throws IOException {
-        byte[] resp = "Задача не найдена".getBytes(StandardCharsets.UTF_8);
-        exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        exchange.sendResponseHeaders(404, resp.length);
+    protected void sendNotFound(HttpExchange exchange, String text) throws IOException {
+        byte[] resp = text.getBytes(StandardCharsets.UTF_8);
         try (OutputStream os = exchange.getResponseBody()) {
+            exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+            exchange.sendResponseHeaders(404, resp.length);
             os.write(resp);
         }
         exchange.close();
     }
-    protected void sendHasInteractions(HttpExchange h) throws IOException {
-        byte[] resp = "Задача пересекается по времени".getBytes(StandardCharsets.UTF_8);
-        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        h.sendResponseHeaders(406, resp.length);
-        h.getResponseBody().write(resp);
-        h.close();
+    protected void sendNotAcceptable(HttpExchange exchange, String text) throws IOException {
+        byte[] resp = text.getBytes(StandardCharsets.UTF_8);
+        try (OutputStream os = exchange.getResponseBody()) {
+            exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
+            exchange.sendResponseHeaders(406, resp.length);
+            os.write(resp);
+        }
+        exchange.close();
     }
 
     protected int getPathLength(HttpExchange exchange) {
