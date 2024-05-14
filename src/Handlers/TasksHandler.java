@@ -105,7 +105,9 @@ public class TasksHandler implements HttpHandler {
                 switch (pathLength) {
                     case 2 -> {
                         manager.deleteSimpleTasks();
-                        baseHttpHandler.sendText(exchange, "Задачи удалены");
+                        try (OutputStream os = exchange.getResponseBody()) {
+                            exchange.sendResponseHeaders(201, 0);
+                        }
                     }
                     case 3 -> {
                         Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
