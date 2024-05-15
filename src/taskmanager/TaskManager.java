@@ -35,6 +35,8 @@ public interface TaskManager {
 
     ArrayList<Epic> getEpicTasks();
 
+    ArrayList<Subtask> getEpicSubtasks(int epicID);
+
     ArrayList<Subtask> getSubtasks();
 
     void deleteSimpleTasks();

@@ -6,8 +6,8 @@ import java.time.*;
 
 public class Subtask extends Task {
 
-    private int epicID;
-    private TaskTypes taskType = TaskTypes.SUBTASK;
+    protected int epicID;
+    protected TaskTypes subtaskType = TaskTypes.SUBTASK;
 
 
     public Subtask(String title, String description, TaskStatus status) {

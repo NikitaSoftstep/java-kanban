@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     protected int counter = 0;
@@ -123,7 +124,6 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(epicID);
         epic.setStartTime(startTime);
         epic.setDuration(duration);
-        epic.setEndTime(endTime);
         epics.put(epicID, epic);
 
     }
@@ -148,17 +148,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask addSubtask(Subtask subtask) {
-        if (epics.containsKey(subtask.getEpicID())) {
+        if (epics.containsKey(subtask.getEpicID()) && checkTimeAndDuration(subtask)) {
             int newID = increaseCounter();
             subtask.setTaskID(newID);
-            if (checkTimeAndDuration(subtask)) {
-                subtasks.put(newID, subtask);
-                Epic epic = epics.get(subtask.getEpicID());
-                epic.addSubtaskID(newID);
-                int epicID = subtask.getEpicID();
-                checkEpicTimeAndStatus(subtask);
-                return subtask;
-            }
+            subtasks.put(newID, subtask);
+            Epic epic = epics.get(subtask.getEpicID());
+            epic.addSubtaskID(newID);
+            checkEpicTimeAndStatus(subtask);
+            return subtask;
+
         }
         return null;
     }
@@ -207,15 +205,18 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteSubtask(int taskID) {
         if (subtasks.containsKey(taskID)) {
+
             Subtask subTask = subtasks.get(taskID);
             int epicID = subTask.getEpicID();
-            subtasks.remove(taskID);
             Epic epic = epics.get(epicID);
+            epic.getSubtaskIDs().remove(Integer.valueOf(taskID));
+            subtasks.remove(taskID);
+
             history.remove(taskID);
             if (!prioritizedTasks.isEmpty()) {
                 prioritizedTasks.removeIf(task -> task.getTaskID() == taskID);
             }
-            epic.getSubtaskIDs().remove(taskID);
+
             checkEpicTimeAndStatus(subTask);
         }
     }
@@ -292,6 +293,15 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public ArrayList<Subtask> getSubtasks() {
         return new ArrayList<>(subtasks.values());
+    }
+
+    public ArrayList<Subtask> getEpicSubtasks(int epicID) {
+        ArrayList<Integer> epicIds = epics.get(epicID).getSubtaskIDs();
+        List<Subtask> epicSubtasks = epicIds.stream()
+                .filter(subtasks::containsKey)
+                .map(subtasks::get)
+                .toList();
+        return new ArrayList<>(epicSubtasks);
     }
 
     @Override

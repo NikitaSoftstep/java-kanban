@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
 
-    private TaskTypes taskType = TaskTypes.EPIC;
-    private ArrayList<Integer> subtaskIDs = new ArrayList<>();
+    protected TaskTypes epicType = TaskTypes.EPIC;
+    protected ArrayList<Integer> subtaskIDs = new ArrayList<>();
 
 
     public Epic(String title, String description, TaskStatus status) {
@@ -16,9 +16,6 @@ public class Epic extends Task {
 
     }
 
-    public void setEndTime(Instant endtime) {
-        this.endTime = endtime;
-    }
 
     public void addSubtaskID(int subtaskID) {
         subtaskIDs.add(subtaskID);

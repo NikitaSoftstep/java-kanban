@@ -2,9 +2,11 @@ package Handlers;
 
 import Handlers.Adapters.DurationAdapter;
 import Handlers.Adapters.InstantAdapter;
+import Handlers.Adapters.TaskTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
+import task.TaskTypes;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,6 +22,7 @@ public class BaseHttpHandler {
                 .serializeNulls()
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
                 .registerTypeAdapter(Instant.class, new InstantAdapter())
+                .registerTypeAdapter(TaskTypes.class, new TaskTypeAdapter())
                 .setPrettyPrinting()
                 .create();
         return gson;
