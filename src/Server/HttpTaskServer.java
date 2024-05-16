@@ -1,4 +1,6 @@
-import Handlers.*;
+package Server;
+
+import Server.Handlers.*;
 import com.sun.net.httpserver.HttpServer;
 import taskmanager.TaskManager;
 
@@ -14,7 +16,7 @@ public class HttpTaskServer {
         this.manager = manager;
     }
 
-    protected HttpServer createServer() {
+    public HttpServer createServer() {
         try {
             HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
             createServerHandlers(httpServer);
@@ -25,7 +27,7 @@ public class HttpTaskServer {
     }
 
 
-    protected void createServerHandlers(HttpServer incomingServer) {
+    private void createServerHandlers(HttpServer incomingServer) {
         incomingServer.createContext("/tasks", new TasksHandler(manager));
         incomingServer.createContext("/subtasks", new SubtasksHandler(manager));
         incomingServer.createContext("/epics", new EpicsHandler(manager));

@@ -1,48 +1,65 @@
 package HandlersTests;
 
-import Handlers.BaseHttpHandler;
+import Server.Handlers.BaseHttpHandler;
+import Server.HttpTaskServer;
 import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
-import taskmanager.InMemoryTaskManager;
-import taskmanager.TaskManager;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.List;
 
-public class TasksHandlerTest extends BaseHttpHandler {
+import taskmanager.InMemoryTaskManager;
+import taskmanager.TaskManager;
+import task.Task;
+import task.TaskTypes;
+import category.TaskStatus;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+
+public class HttpTaskManagerTasksTest extends BaseHttpHandler {
 
     // создаём экземпляр InMemoryTaskManager
     TaskManager manager = new InMemoryTaskManager();
-    // передаём его в качестве аргумента в конструктор HttpTaskServer
-    BaseHttpHandler baseHandler = new BaseHttpHandler();
-    Gson gson = baseHandler
+    // передаём его в качестве аргумента в конструктор Server.HttpTaskServer
+    HttpTaskServer httpTaskServer = new HttpTaskServer(manager);
+    HttpServer server = httpTaskServer.createServer();
 
-    public TasksHandlerTest() throws IOException {
+
+    Gson gson = createGson();
+
+    public HttpTaskManagerTasksTest() throws IOException {
     }
 
     @BeforeEach
     public void setUp() {
-        manager.deleteTasks();
+        manager.deleteSimpleTasks();
         manager.deleteSubtasks();
-        manager.deleteEpics();
-        taskServer.start();
+        manager.deleteEpicTasks();
+        server.start();
     }
 
     @AfterEach
     public void shutDown() {
-        taskServer.stop();
+        server.stop(8);
     }
 
     @Test
     public void testAddTask() throws IOException, InterruptedException {
         // создаём задачу
         Task task = new Task("Test 2", "Testing task 2",
-                TaskStatus.NEW, Duration.ofMinutes(5), LocalDateTime.now());
+                TaskStatus.NEW, Instant.now(), Duration.ofMinutes(5));
         // конвертируем её в JSON
         String taskJson = gson.toJson(task);
 
@@ -54,13 +71,13 @@ public class TasksHandlerTest extends BaseHttpHandler {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode());
+        assertEquals(201, response.statusCode());
 
         // проверяем, что создалась одна задача с корректным именем
-        List<Task> tasksFromManager = manager.getTasks();
+        List<Task> tasksFromManager = manager.getSimpleTasks();
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
-        assertEquals("Test 2", tasksFromManager.get(0).getName(), "Некорректное имя задачи");
+        assertEquals("Test 2", tasksFromManager.get(0).getTitle(), "Некорректное имя задачи");
     }
 }

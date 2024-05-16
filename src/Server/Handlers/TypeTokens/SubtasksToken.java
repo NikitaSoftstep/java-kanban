@@ -1,4 +1,4 @@
-package Handlers.TypeTokens;
+package Server.Handlers.TypeTokens;
 
 import com.google.gson.reflect.TypeToken;
 import task.Subtask;

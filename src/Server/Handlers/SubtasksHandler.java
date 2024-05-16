@@ -1,21 +1,25 @@
-package Handlers;
+package Server.Handlers;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import task.Task;
+import task.Subtask;
 import taskmanager.TaskManager;
-import java.io.*;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
-public class TasksHandler extends BaseHttpHandler implements HttpHandler {
+public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
+
 
     TaskManager manager;
 
-    public TasksHandler(TaskManager manager) {
+    public SubtasksHandler(TaskManager manager) {
         this.manager = manager;
     }
 
@@ -26,13 +30,11 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
             Gson gson = createGson();
             String method = exchange.getRequestMethod();
             int pathLength = getPathLength(exchange);
-
-
             switch (method) {
                 case "GET" -> {
                     switch (pathLength) {
                         case 2 -> {
-                            List<Task> tasks = manager.getSimpleTasks();
+                            List<Subtask> tasks = manager.getSubtasks();
                             if (tasks == null) {
                                 sendNotFound(exchange, "Задача не найдена");
                             }
@@ -44,12 +46,12 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                             if (id.isEmpty()) {
                                 sendNotFound(exchange, "Задача не найдена");
                             } else {
-                                Task newTask = manager.getSimpleTask(id.get());
+                                Subtask newTask = manager.getSubtask(id.get());
                                 if (newTask == null) {
                                     sendNotFound(exchange, "Задача не найдена");
                                 }
                             }
-                            Task task = manager.getSimpleTask(id.get());
+                            Subtask task = manager.getSubtask(id.get());
                             String taskJson = gson.toJson(task);
                             sendText(exchange, taskJson);
                         }
@@ -63,10 +65,10 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                         sendNotAcceptable(exchange, "Это не Json объект");
                     }
                     JsonObject jsonObject = element.getAsJsonObject();
-                    Task taskFromJson = gson.fromJson(jsonObject, Task.class);
+                    Subtask taskFromJson = gson.fromJson(jsonObject, Subtask.class);
                     switch (pathLength) {
                         case 2 -> {
-                            Task newTask = manager.addSimpleTask(taskFromJson);
+                            Subtask newTask = manager.addSubtask(taskFromJson);
                             if (newTask == null) {
                                 sendNotAcceptable(exchange, "Задача пересекается по времени");
                             } else {
@@ -77,7 +79,7 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                         case 3 -> {
                             Optional<Integer> id = getTaskId(exchange);
                             if (id.isPresent()) {
-                                Task task2 = manager.updateSimpleTask(taskFromJson);
+                                Subtask task2 = manager.updateSubtask(taskFromJson);
                                 if (task2 != null) {
                                     exchange.sendResponseHeaders(201, 0);
                                     exchange.close();
@@ -93,15 +95,15 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                 case "DELETE" -> {
                     switch (pathLength) {
                         case 2 -> {
-                            manager.deleteSimpleTasks();
+                            manager.deleteSubtasks();
                             exchange.sendResponseHeaders(201, 0);
                             exchange.close();
                         }
                         case 3 -> {
                             Optional<Integer> id = getTaskId(exchange);
                             if (id.isPresent()) {
-                                if (manager.getSimpleTask(id.get()) != null) {
-                                    manager.deleteSimpleTask(id.get());
+                                if (manager.getSubtask(id.get()) != null) {
+                                    manager.deleteSubtask(id.get());
                                     exchange.sendResponseHeaders(201, 0);
                                     exchange.close();
                                 } else {
@@ -125,4 +127,5 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
         }
 
     }
+
 }
