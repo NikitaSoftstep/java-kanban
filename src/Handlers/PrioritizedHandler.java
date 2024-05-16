@@ -5,15 +5,13 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import task.Task;
 import taskmanager.TaskManager;
-
 import java.io.IOException;
 import java.util.List;
 
-public class PrioritizedHandler implements HttpHandler {
+public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
 
     TaskManager manager;
-    BaseHttpHandler baseHttpHandler = new BaseHttpHandler();
-    Gson gson = baseHttpHandler.createGson();
+    Gson gson = createGson();
 
     public PrioritizedHandler(TaskManager manager) {
         this.manager = manager;
@@ -25,9 +23,9 @@ public class PrioritizedHandler implements HttpHandler {
         if (method.equals("GET")) {
             List<Task> prioritizedTasks = manager.getPrioritizedTasks();
             String prioritizedJson = gson.toJson(prioritizedTasks);
-             baseHttpHandler.sendText(exchange, prioritizedJson);
+             sendText(exchange, prioritizedJson);
         } else {
-            baseHttpHandler.sendNotFound(exchange, "Method not found");
+            sendNotFound(exchange, "Method not found");
         }
         exchange.close();
     }

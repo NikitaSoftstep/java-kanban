@@ -6,23 +6,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import task.Epic;
 import task.Subtask;
-import task.Task;
 import taskmanager.TaskManager;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
-public class SubtasksHandler implements HttpHandler {
+public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
 
 
     TaskManager manager;
-    BaseHttpHandler baseHttpHandler = new BaseHttpHandler();
 
     public SubtasksHandler(TaskManager manager) {
         this.manager = manager;
@@ -32,33 +27,33 @@ public class SubtasksHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) {
         try {
-            Gson gson = baseHttpHandler.createGson();
+            Gson gson = createGson();
             String method = exchange.getRequestMethod();
-            int pathLength = baseHttpHandler.getPathLength(exchange);
+            int pathLength = getPathLength(exchange);
             switch (method) {
                 case "GET" -> {
                     switch (pathLength) {
                         case 2 -> {
                             List<Subtask> tasks = manager.getSubtasks();
                             if (tasks == null) {
-                                baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
+                                sendNotFound(exchange, "Задача не найдена");
                             }
                             String tasksJson = gson.toJson(tasks);
-                            baseHttpHandler.sendText(exchange, tasksJson);
+                            sendText(exchange, tasksJson);
                         }
                         case 3 -> {
-                            Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
+                            Optional<Integer> id = getTaskId(exchange);
                             if (id.isEmpty()) {
-                                baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
+                                sendNotFound(exchange, "Задача не найдена");
                             } else {
                                 Subtask newTask = manager.getSubtask(id.get());
                                 if (newTask == null) {
-                                    baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
+                                    sendNotFound(exchange, "Задача не найдена");
                                 }
                             }
                             Subtask task = manager.getSubtask(id.get());
                             String taskJson = gson.toJson(task);
-                            baseHttpHandler.sendText(exchange, taskJson);
+                            sendText(exchange, taskJson);
                         }
                     }
                 }
@@ -67,7 +62,7 @@ public class SubtasksHandler implements HttpHandler {
                     String stringInput = new String(input.readAllBytes(), StandardCharsets.UTF_8);
                     JsonElement element = JsonParser.parseString(stringInput);
                     if (!element.isJsonObject()) {
-                        baseHttpHandler.sendNotAcceptable(exchange, "Это не Json объект");
+                        sendNotAcceptable(exchange, "Это не Json объект");
                     }
                     JsonObject jsonObject = element.getAsJsonObject();
                     Subtask taskFromJson = gson.fromJson(jsonObject, Subtask.class);
@@ -75,24 +70,24 @@ public class SubtasksHandler implements HttpHandler {
                         case 2 -> {
                             Subtask newTask = manager.addSubtask(taskFromJson);
                             if (newTask == null) {
-                                baseHttpHandler.sendNotAcceptable(exchange, "Задача пересекается по времени");
+                                sendNotAcceptable(exchange, "Задача пересекается по времени");
                             } else {
                                 exchange.sendResponseHeaders(201, 0);
                                 exchange.close();
                             }
                         }
                         case 3 -> {
-                            Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
+                            Optional<Integer> id = getTaskId(exchange);
                             if (id.isPresent()) {
                                 Subtask task2 = manager.updateSubtask(taskFromJson);
                                 if (task2 != null) {
                                     exchange.sendResponseHeaders(201, 0);
                                     exchange.close();
                                 } else {
-                                    baseHttpHandler.sendNotAcceptable(exchange, "Возникло пересечение");
+                                    sendNotAcceptable(exchange, "Возникло пересечение");
                                 }
                             } else {
-                                baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
+                                sendNotFound(exchange, "Задача не найдена");
                             }
                         }
                     }
@@ -105,14 +100,14 @@ public class SubtasksHandler implements HttpHandler {
                             exchange.close();
                         }
                         case 3 -> {
-                            Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
+                            Optional<Integer> id = getTaskId(exchange);
                             if (id.isPresent()) {
                                 if (manager.getSubtask(id.get()) != null) {
                                     manager.deleteSubtask(id.get());
                                     exchange.sendResponseHeaders(201, 0);
                                     exchange.close();
                                 } else {
-                                    baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
+                                    sendNotFound(exchange, "Задача не найдена");
                                 }
                             }
                         }

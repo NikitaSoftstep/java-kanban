@@ -5,16 +5,14 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import task.Task;
 import taskmanager.TaskManager;
-
 import java.io.IOException;
 import java.util.List;
 
 
-public class HistoryHandler implements HttpHandler {
+public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
 
     TaskManager manager;
-    BaseHttpHandler baseHttpHandler = new BaseHttpHandler();
-    Gson gson = baseHttpHandler.createGson();
+    Gson gson = createGson();
 
 
     public HistoryHandler(TaskManager manager) {
@@ -28,9 +26,9 @@ public class HistoryHandler implements HttpHandler {
 
                 List<Task> history = manager.getHistory();
                 String historyJson = gson.toJson(history);
-                baseHttpHandler.sendText(exchange, historyJson);
+                sendText(exchange, historyJson);
             } else {
-                baseHttpHandler.sendNotFound(exchange, "Method not found");
+                sendNotFound(exchange, "Method not found");
             }
             exchange.close();
         } catch (IOException e) {
