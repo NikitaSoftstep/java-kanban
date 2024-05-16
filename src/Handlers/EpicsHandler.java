@@ -1,5 +1,6 @@
 package Handlers;
 
+import Handlers.TypeTokens.EpicsToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -8,6 +9,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import task.Epic;
 import task.Subtask;
+import task.Task;
 import taskmanager.FileBackedTaskManager;
 import taskmanager.TaskManager;
 
@@ -43,7 +45,6 @@ public class EpicsHandler implements HttpHandler {
                             List<Epic> tasks = manager.getEpicTasks();
                             if (tasks == null) {
                                 baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
-                                return;
                             }
                             String tasksJson = gson.toJson(tasks);
                             baseHttpHandler.sendText(exchange, tasksJson);
@@ -52,12 +53,10 @@ public class EpicsHandler implements HttpHandler {
                             Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
                             if (id.isEmpty()) {
                                 baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
-                                return;
                             } else {
                                 Epic newTask = manager.getEpicTask(id.get());
                                 if (newTask == null) {
                                     baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
-                                    return;
                                 }
                             }
                             Epic task = manager.getEpicTask(id.get());
@@ -66,7 +65,9 @@ public class EpicsHandler implements HttpHandler {
                         }
                         case 4 -> {
                             Optional<Integer> epicId = baseHttpHandler.getTaskId(exchange);
-                            if (epicId.isPresent()) {
+                            if (epicId.isEmpty()) {
+                                baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
+                            } else {
                                 if (manager.getEpicTask(epicId.get()) != null) {
                                     ArrayList<Subtask> subtasks = manager.getEpicSubtasks(epicId.get());
                                     String subtasksJson = gson.toJson(subtasks);
@@ -82,32 +83,26 @@ public class EpicsHandler implements HttpHandler {
                     JsonElement element = JsonParser.parseString(stringInput);
                     if (!element.isJsonObject()) {
                         baseHttpHandler.sendNotAcceptable(exchange, "Это не Json объект");
-                        return;
                     }
                     JsonObject jsonObject = element.getAsJsonObject();
-                    Subtask taskFromJson = gson.fromJson(jsonObject, Subtask.class);
+                    Epic taskFromJson = gson.fromJson(jsonObject, Epic.class);
                     switch (pathLength) {
                         case 2 -> {
-                            Subtask newTask = manager.addSubtask(taskFromJson);
-                            if (newTask == null) {
-                                baseHttpHandler.sendNotAcceptable(exchange, "Задача пересекается по времени");
-                            } else {
-                                try (OutputStream os = exchange.getResponseBody()) {
-                                    exchange.sendResponseHeaders(201, 0);
-                                }
-                            }
+                            manager.addEpicTask(taskFromJson);
+                            exchange.sendResponseHeaders(201, 0);
+                            exchange.close();
                         }
                         case 3 -> {
                             Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
                             if (id.isPresent()) {
-                                Subtask task2 = manager.updateSubtask(taskFromJson);
+                                Epic task2 = manager.updateEpicTask(taskFromJson);
                                 if (task2 != null) {
-                                    try (OutputStream os = exchange.getResponseBody()) {
                                         exchange.sendResponseHeaders(201, 0);
-                                    }
+                                        exchange.close();
                                 } else {
                                     baseHttpHandler.sendNotAcceptable(exchange, "Возникло пересечение");
                                 }
+                            } else {
                                 baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
                             }
                         }
@@ -116,19 +111,20 @@ public class EpicsHandler implements HttpHandler {
                 case "DELETE" -> {
                     switch (pathLength) {
                         case 2 -> {
-                            manager.deleteSubtasks();
-                            try (OutputStream os = exchange.getResponseBody()) {
-                                exchange.sendResponseHeaders(201, 0);
-                            }
+                            manager.deleteEpicTasks();
+                            exchange.sendResponseHeaders(201, 0);
+                            exchange.close();
+
                         }
                         case 3 -> {
                             Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
                             if (id.isPresent()) {
-                                if (manager.getSubtask(id.get()) != null) {
-                                    manager.deleteSubtask(id.get());
-                                    try (OutputStream os = exchange.getResponseBody()) {
-                                        exchange.sendResponseHeaders(201, 0);
-                                    }
+                                if (manager.getEpicTask(id.get()) != null) {
+                                    manager.deleteEpic(id.get());
+                                    exchange.sendResponseHeaders(201, 0);
+                                    exchange.close();
+                                } else {
+                                    baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
                                 }
                             }
                         }
@@ -140,7 +136,9 @@ public class EpicsHandler implements HttpHandler {
                     try (OutputStream os = exchange.getResponseBody()) {
                         os.write(errorMessage.getBytes());
                     }
+                    exchange.close();
                 }
+
             }
         } catch (Exception  e) {
             System.out.println("Возникло исключение");

@@ -44,9 +44,7 @@ public class TasksHandler implements HttpHandler {
                             List<Task> tasks = manager.getSimpleTasks();
                             if (tasks == null) {
                                 baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
-                                return;
                             }
-
                             String tasksJson = gson.toJson(tasks);
                             baseHttpHandler.sendText(exchange, tasksJson);
                         }
@@ -54,12 +52,10 @@ public class TasksHandler implements HttpHandler {
                             Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
                             if (id.isEmpty()) {
                                 baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
-                                return;
                             } else {
                                 Task newTask = manager.getSimpleTask(id.get());
                                 if (newTask == null) {
                                     baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
-                                    return;
                                 }
                             }
                             Task task = manager.getSimpleTask(id.get());
@@ -74,7 +70,6 @@ public class TasksHandler implements HttpHandler {
                     JsonElement element = JsonParser.parseString(stringInput);
                     if (!element.isJsonObject()) {
                         baseHttpHandler.sendNotAcceptable(exchange, "Это не Json объект");
-                        return;
                     }
                     JsonObject jsonObject = element.getAsJsonObject();
                     Task taskFromJson = gson.fromJson(jsonObject, Task.class);
@@ -84,9 +79,8 @@ public class TasksHandler implements HttpHandler {
                             if (newTask == null) {
                                 baseHttpHandler.sendNotAcceptable(exchange, "Задача пересекается по времени");
                             } else {
-                                try (OutputStream os = exchange.getResponseBody()) {
-                                    exchange.sendResponseHeaders(201, 0);
-                                }
+                                exchange.sendResponseHeaders(201, 0);
+                                exchange.close();
                             }
                         }
                         case 3 -> {
@@ -94,12 +88,12 @@ public class TasksHandler implements HttpHandler {
                             if (id.isPresent()) {
                                 Task task2 = manager.updateSimpleTask(taskFromJson);
                                 if (task2 != null) {
-                                    try (OutputStream os = exchange.getResponseBody()) {
-                                        exchange.sendResponseHeaders(201, 0);
-                                    }
+                                    exchange.sendResponseHeaders(201, 0);
+                                    exchange.close();
                                 } else {
                                     baseHttpHandler.sendNotAcceptable(exchange, "Возникло пересечение");
                                 }
+                            } else {
                                 baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
                             }
                         }
@@ -109,18 +103,18 @@ public class TasksHandler implements HttpHandler {
                     switch (pathLength) {
                         case 2 -> {
                             manager.deleteSimpleTasks();
-                            try (OutputStream os = exchange.getResponseBody()) {
-                                exchange.sendResponseHeaders(201, 0);
-                            }
+                            exchange.sendResponseHeaders(201, 0);
+                            exchange.close();
                         }
                         case 3 -> {
                             Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
                             if (id.isPresent()) {
                                 if (manager.getSimpleTask(id.get()) != null) {
                                     manager.deleteSimpleTask(id.get());
-                                    try (OutputStream os = exchange.getResponseBody()) {
-                                        exchange.sendResponseHeaders(201, 0);
-                                    }
+                                    exchange.sendResponseHeaders(201, 0);
+                                    exchange.close();
+                                } else {
+                                    baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
                                 }
                             }
                         }
@@ -132,6 +126,7 @@ public class TasksHandler implements HttpHandler {
                     try (OutputStream os = exchange.getResponseBody()) {
                         os.write(errorMessage.getBytes());
                     }
+                    exchange.close();
                 }
             }
         } catch (Exception e) {

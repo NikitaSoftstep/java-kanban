@@ -35,8 +35,6 @@ public class SubtasksHandler implements HttpHandler {
             Gson gson = baseHttpHandler.createGson();
             String method = exchange.getRequestMethod();
             int pathLength = baseHttpHandler.getPathLength(exchange);
-
-
             switch (method) {
                 case "GET" -> {
                     switch (pathLength) {
@@ -44,7 +42,6 @@ public class SubtasksHandler implements HttpHandler {
                             List<Subtask> tasks = manager.getSubtasks();
                             if (tasks == null) {
                                 baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
-                                return;
                             }
                             String tasksJson = gson.toJson(tasks);
                             baseHttpHandler.sendText(exchange, tasksJson);
@@ -53,12 +50,10 @@ public class SubtasksHandler implements HttpHandler {
                             Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
                             if (id.isEmpty()) {
                                 baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
-                                return;
                             } else {
                                 Subtask newTask = manager.getSubtask(id.get());
                                 if (newTask == null) {
                                     baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
-                                    return;
                                 }
                             }
                             Subtask task = manager.getSubtask(id.get());
@@ -73,7 +68,6 @@ public class SubtasksHandler implements HttpHandler {
                     JsonElement element = JsonParser.parseString(stringInput);
                     if (!element.isJsonObject()) {
                         baseHttpHandler.sendNotAcceptable(exchange, "Это не Json объект");
-                        return;
                     }
                     JsonObject jsonObject = element.getAsJsonObject();
                     Subtask taskFromJson = gson.fromJson(jsonObject, Subtask.class);
@@ -83,9 +77,8 @@ public class SubtasksHandler implements HttpHandler {
                             if (newTask == null) {
                                 baseHttpHandler.sendNotAcceptable(exchange, "Задача пересекается по времени");
                             } else {
-                                try (OutputStream os = exchange.getResponseBody()) {
-                                    exchange.sendResponseHeaders(201, 0);
-                                }
+                                exchange.sendResponseHeaders(201, 0);
+                                exchange.close();
                             }
                         }
                         case 3 -> {
@@ -93,12 +86,12 @@ public class SubtasksHandler implements HttpHandler {
                             if (id.isPresent()) {
                                 Subtask task2 = manager.updateSubtask(taskFromJson);
                                 if (task2 != null) {
-                                    try (OutputStream os = exchange.getResponseBody()) {
-                                        exchange.sendResponseHeaders(201, 0);
-                                    }
+                                    exchange.sendResponseHeaders(201, 0);
+                                    exchange.close();
                                 } else {
                                     baseHttpHandler.sendNotAcceptable(exchange, "Возникло пересечение");
                                 }
+                            } else {
                                 baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
                             }
                         }
@@ -108,18 +101,18 @@ public class SubtasksHandler implements HttpHandler {
                     switch (pathLength) {
                         case 2 -> {
                             manager.deleteSubtasks();
-                            try (OutputStream os = exchange.getResponseBody()) {
-                                exchange.sendResponseHeaders(201, 0);
-                            }
+                            exchange.sendResponseHeaders(201, 0);
+                            exchange.close();
                         }
                         case 3 -> {
                             Optional<Integer> id = baseHttpHandler.getTaskId(exchange);
                             if (id.isPresent()) {
                                 if (manager.getSubtask(id.get()) != null) {
                                     manager.deleteSubtask(id.get());
-                                    try (OutputStream os = exchange.getResponseBody()) {
-                                        exchange.sendResponseHeaders(201, 0);
-                                    }
+                                    exchange.sendResponseHeaders(201, 0);
+                                    exchange.close();
+                                } else {
+                                    baseHttpHandler.sendNotFound(exchange, "Задача не найдена");
                                 }
                             }
                         }
@@ -131,6 +124,7 @@ public class SubtasksHandler implements HttpHandler {
                     try (OutputStream os = exchange.getResponseBody()) {
                         os.write(errorMessage.getBytes());
                     }
+                    exchange.close();
                 }
             }
         } catch (Exception e) {

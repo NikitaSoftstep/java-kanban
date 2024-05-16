@@ -1,6 +1,8 @@
 id,type,name,description,status,startTime,duration,epic
-9,EPIC,эпик,задача,DONE,05.05.1990 15:00,10
-11,SUBTASK,ООО,УИИИ,DONE,05.05.1990 15:00,10,9
+17,TASK,aa,задача,NEW,null,null
+19,TASK,первая,задача,NEW,01.01.1990 15:00,1
+18,EPIC,a,задача,NEW,01.01.1989 15:00,10
+20,SUBTASK,подзадача,оо,NEW,01.01.1989 15:00,10,18
 
 ids
-9,11,
+17,18,
