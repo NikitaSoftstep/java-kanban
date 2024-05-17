@@ -3,12 +3,11 @@ package Server;
 import Server.Handlers.*;
 import com.sun.net.httpserver.HttpServer;
 import taskmanager.TaskManager;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-public class HttpTaskServer {
 
+public class HttpTaskServer {
     protected static final int PORT = 8080;
     private TaskManager manager;
 
