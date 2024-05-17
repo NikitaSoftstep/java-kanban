@@ -1,6 +1,6 @@
-package Server;
+package server;
 
-import Server.Handlers.*;
+import server.Handlers.*;
 import com.sun.net.httpserver.HttpServer;
 import taskmanager.TaskManager;
 import java.io.IOException;

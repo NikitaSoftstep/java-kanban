@@ -1,8 +1,8 @@
-package Server.Handlers;
+package server.Handlers;
 
-import Server.Handlers.Adapters.DurationAdapter;
-import Server.Handlers.Adapters.InstantAdapter;
-import Server.Handlers.Adapters.TaskTypeAdapter;
+import server.Handlers.Adapters.DurationAdapter;
+import server.Handlers.Adapters.InstantAdapter;
+import server.Handlers.Adapters.TaskTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;

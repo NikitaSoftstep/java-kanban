@@ -1,4 +1,4 @@
-package Server.Handlers;
+package server.Handlers;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;

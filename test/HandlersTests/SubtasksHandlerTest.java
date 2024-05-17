@@ -1,7 +1,7 @@
 package HandlersTests;
 
-import Server.Handlers.BaseHttpHandler;
-import Server.HttpTaskServer;
+import server.Handlers.BaseHttpHandler;
+import server.HttpTaskServer;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
-import task.Epic;
 import task.Subtask;
 import taskmanager.Managers;
 import taskmanager.TaskManager;
