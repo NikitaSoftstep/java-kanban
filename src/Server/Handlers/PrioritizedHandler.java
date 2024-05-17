@@ -23,7 +23,7 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
         if (method.equals("GET")) {
             List<Task> prioritizedTasks = manager.getPrioritizedTasks();
             String prioritizedJson = gson.toJson(prioritizedTasks);
-             sendText(exchange, prioritizedJson);
+            sendText(exchange, prioritizedJson);
         } else {
             sendNotFound(exchange, "Method not found");
         }

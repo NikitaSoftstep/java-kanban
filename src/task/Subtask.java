@@ -7,15 +7,16 @@ import java.time.*;
 public class Subtask extends Task {
 
     protected int epicID;
-    protected TaskTypes subtaskType = TaskTypes.SUBTASK;
 
 
     public Subtask(String title, String description, TaskStatus status) {
         super(title, description, status);
+        taskType = TaskTypes.SUBTASK;
     }
 
     public Subtask(String title, String description, TaskStatus status, Instant startTime, Duration duration) {
         super(title, description, status, startTime, duration);
+        taskType = TaskTypes.SUBTASK;
     }
 
     public int getEpicID() {

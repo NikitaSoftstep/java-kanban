@@ -30,17 +30,12 @@ public class Main {
     private static final HttpTaskServer httpServer = new HttpTaskServer(fileBackedTaskManager);
 
 
-
-
     public static void main(String[] args) throws IOException {
         HttpServer server = httpServer.createServer();
         server.start();
         startApp();
         server.stop(8);
     }
-
-
-
 
 
     public static void startApp() throws IOException {

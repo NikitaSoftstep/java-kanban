@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import task.TaskTypes;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -28,7 +29,6 @@ public class BaseHttpHandler {
     }
 
 
-
     protected void sendText(HttpExchange exchange, String text) throws IOException {
 
         try (OutputStream os = exchange.getResponseBody()) {
@@ -48,6 +48,7 @@ public class BaseHttpHandler {
         }
         exchange.close();
     }
+
     protected void sendNotAcceptable(HttpExchange exchange, String text) throws IOException {
         byte[] resp = text.getBytes(StandardCharsets.UTF_8);
         try (OutputStream os = exchange.getResponseBody()) {
@@ -63,7 +64,7 @@ public class BaseHttpHandler {
         return pathLength.length;
     }
 
-    protected Optional<Integer> getTaskId(HttpExchange exchange){
+    protected Optional<Integer> getTaskId(HttpExchange exchange) {
         String[] splitPath = exchange.getRequestURI().getPath().split("/");
         try {
             return Optional.of(Integer.parseInt(splitPath[2]));
@@ -71,4 +72,4 @@ public class BaseHttpHandler {
             return Optional.empty();
         }
     }
- }
+}

@@ -15,31 +15,27 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import taskmanager.InMemoryTaskManager;
+import taskmanager.Managers;
 import taskmanager.TaskManager;
 import task.Task;
-import task.TaskTypes;
 import category.TaskStatus;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-public class HttpTaskManagerTasksTest extends BaseHttpHandler {
-
-    // создаём экземпляр InMemoryTaskManager
-    TaskManager manager = new InMemoryTaskManager();
-    // передаём его в качестве аргумента в конструктор Server.HttpTaskServer
+public class TasksHandlerTest extends BaseHttpHandler {
+    TaskManager manager = Managers.getDefaultManager();
     HttpTaskServer httpTaskServer = new HttpTaskServer(manager);
     HttpServer server = httpTaskServer.createServer();
 
 
     Gson gson = createGson();
 
-    public HttpTaskManagerTasksTest() throws IOException {
+    public TasksHandlerTest() throws IOException {
     }
 
     @BeforeEach
@@ -57,23 +53,23 @@ public class HttpTaskManagerTasksTest extends BaseHttpHandler {
 
     @Test
     public void testAddTask() throws IOException, InterruptedException {
-        // создаём задачу
+
+
         Task task = new Task("Test 2", "Testing task 2",
                 TaskStatus.NEW, Instant.now(), Duration.ofMinutes(5));
-        // конвертируем её в JSON
+        task.setTaskID(1);
         String taskJson = gson.toJson(task);
 
-        // создаём HTTP-клиент и запрос
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks");
-        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(HttpRequest.BodyPublishers.ofString(taskJson)).build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(taskJson))
+                .build();
 
-        // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        // проверяем код ответа
         assertEquals(201, response.statusCode());
 
-        // проверяем, что создалась одна задача с корректным именем
         List<Task> tasksFromManager = manager.getSimpleTasks();
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");

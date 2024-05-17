@@ -34,8 +34,8 @@ public class Task {
                 TaskStatus status,
                 Instant startTime,
                 Duration duration) {
-        this.description = description;
         this.title = title;
+        this.description = description;
         this.status = status;
         this.startTime = startTime;
         this.duration = duration;

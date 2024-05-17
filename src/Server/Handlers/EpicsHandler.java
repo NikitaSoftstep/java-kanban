@@ -19,6 +19,7 @@ import java.util.Optional;
 public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
 
     TaskManager manager;
+
     public EpicsHandler(TaskManager manager) {
         this.manager = manager;
     }
@@ -83,16 +84,18 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
                     switch (pathLength) {
                         case 2 -> {
                             manager.addEpicTask(taskFromJson);
+
                             exchange.sendResponseHeaders(201, 0);
                             exchange.close();
+
                         }
                         case 3 -> {
                             Optional<Integer> id = getTaskId(exchange);
                             if (id.isPresent()) {
                                 Epic task2 = manager.updateEpicTask(taskFromJson);
                                 if (task2 != null) {
-                                        exchange.sendResponseHeaders(201, 0);
-                                        exchange.close();
+                                    exchange.sendResponseHeaders(201, 0);
+                                    exchange.close();
                                 } else {
                                     sendNotAcceptable(exchange, "Возникло пересечение");
                                 }
@@ -134,7 +137,7 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
                 }
 
             }
-        } catch (Exception  e) {
+        } catch (Exception e) {
             System.out.println("Возникло исключение");
         }
 

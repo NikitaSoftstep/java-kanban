@@ -13,9 +13,7 @@ public class Managers {
         return new InMemoryHistoryManager();
     }
 
-    public static TaskManager getFileBackedTaskManager(File savedPath) throws IOException {
-        return new FileBackedTaskManager(savedPath);
-    }
+
 
     public static TaskManager getDefaultManager() {
         return new InMemoryTaskManager();

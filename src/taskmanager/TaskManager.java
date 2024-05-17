@@ -9,7 +9,7 @@ import java.util.List;
 public interface TaskManager {
     Task addSimpleTask(Task task);
 
-    void addEpicTask(Epic epic);
+    Epic addEpicTask(Epic epic);
 
     Subtask addSubtask(Subtask subtask);
 

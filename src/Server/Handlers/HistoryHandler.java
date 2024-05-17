@@ -34,6 +34,6 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
         } catch (IOException e) {
             System.out.println("Возникло исключение");
         }
-     }
+    }
 
 }

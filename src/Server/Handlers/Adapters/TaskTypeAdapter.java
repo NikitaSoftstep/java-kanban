@@ -11,13 +11,15 @@ public class TaskTypeAdapter extends TypeAdapter<TaskTypes> {
 
     @Override
     public void write(JsonWriter jsonWriter, TaskTypes taskType) throws IOException {
-
         jsonWriter.value(taskType.name());
     }
 
     @Override
     public TaskTypes read(JsonReader jsonReader) throws IOException {
-        TaskTypes taskType = TaskTypes.valueOf(jsonReader.nextString());
-        return taskType;
+        try {
+            return TaskTypes.valueOf(jsonReader.nextString());
+        } catch (IllegalArgumentException e) {
+            return TaskTypes.TASK;
+        }
     }
 }
