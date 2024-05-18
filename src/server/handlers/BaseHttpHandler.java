@@ -6,8 +6,6 @@ import server.handlers.adapters.TaskTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
-import task.Epic;
-import task.Task;
 import task.TaskTypes;
 import taskmanager.TaskManager;
 
@@ -16,7 +14,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 
 public class BaseHttpHandler {
