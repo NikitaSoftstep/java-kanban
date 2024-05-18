@@ -1,23 +1,31 @@
-package server.Handlers;
+package server.handlers;
 
-import server.Handlers.Adapters.DurationAdapter;
-import server.Handlers.Adapters.InstantAdapter;
-import server.Handlers.Adapters.TaskTypeAdapter;
+import server.handlers.adapters.DurationAdapter;
+import server.handlers.adapters.InstantAdapter;
+import server.handlers.adapters.TaskTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
+import task.Epic;
+import task.Task;
 import task.TaskTypes;
+import taskmanager.TaskManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 public class BaseHttpHandler {
 
-    protected Gson createGson() {
+    protected TaskManager manager;
+
+    public static Gson gson = createGson();
+
+    public static Gson createGson() {
         Gson gson = new GsonBuilder()
                 .serializeNulls()
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
@@ -35,8 +43,9 @@ public class BaseHttpHandler {
             exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
             exchange.sendResponseHeaders(200, text.getBytes().length);
             os.write(text.getBytes(StandardCharsets.UTF_8));
+        } finally {
+            exchange.close();
         }
-        exchange.close();
     }
 
     protected void sendNotFound(HttpExchange exchange, String text) throws IOException {
@@ -45,8 +54,9 @@ public class BaseHttpHandler {
             exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
             exchange.sendResponseHeaders(404, resp.length);
             os.write(resp);
+        } finally {
+            exchange.close();
         }
-        exchange.close();
     }
 
     protected void sendNotAcceptable(HttpExchange exchange, String text) throws IOException {
@@ -55,8 +65,9 @@ public class BaseHttpHandler {
             exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
             exchange.sendResponseHeaders(406, resp.length);
             os.write(resp);
+        } finally {
+            exchange.close();
         }
-        exchange.close();
     }
 
     protected int getPathLength(HttpExchange exchange) {
@@ -72,4 +83,6 @@ public class BaseHttpHandler {
             return Optional.empty();
         }
     }
+
+
 }

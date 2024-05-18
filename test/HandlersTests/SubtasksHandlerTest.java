@@ -1,6 +1,6 @@
 package HandlersTests;
 
-import server.Handlers.BaseHttpHandler;
+import server.handlers.BaseHttpHandler;
 import server.HttpTaskServer;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpServer;

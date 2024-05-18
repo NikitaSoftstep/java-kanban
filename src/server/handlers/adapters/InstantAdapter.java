@@ -1,4 +1,4 @@
-package server.Handlers.Adapters;
+package server.handlers.adapters;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class InstantAdapter extends TypeAdapter<Instant> {
 
-    static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     @Override
     public void write(JsonWriter jsonWriter, Instant instant) throws IOException {

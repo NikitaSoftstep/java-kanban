@@ -1,9 +1,9 @@
 package HandlersTests;
 
-import server.Handlers.Adapters.DurationAdapter;
-import server.Handlers.Adapters.InstantAdapter;
-import server.Handlers.Adapters.TaskTypeAdapter;
-import server.Handlers.BaseHttpHandler;
+import server.handlers.adapters.DurationAdapter;
+import server.handlers.adapters.InstantAdapter;
+import server.handlers.adapters.TaskTypeAdapter;
+import server.handlers.BaseHttpHandler;
 import server.HttpTaskServer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -1,18 +1,15 @@
-package server.Handlers;
+package server.handlers;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import task.Task;
 import taskmanager.TaskManager;
+
 import java.io.IOException;
 import java.util.List;
 
 
 public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
-
-    TaskManager manager;
-    Gson gson = createGson();
 
 
     public HistoryHandler(TaskManager manager) {
@@ -32,7 +29,9 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
             }
             exchange.close();
         } catch (IOException e) {
-            System.out.println("Возникло исключение");
+            System.out.println("Возникло исключение: " + e.getMessage());
+            System.out.println("Подробности об ошибке:");
+            e.printStackTrace();
         }
     }
 
