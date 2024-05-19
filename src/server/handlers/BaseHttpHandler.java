@@ -78,6 +78,7 @@ public class BaseHttpHandler {
             return Optional.of(Integer.parseInt(splitPath[2]));
         } catch (NullPointerException e) {
             System.out.println("При обработке ID возникло исключение NullPointerException: " + e.getMessage());
+            e.getStackTrace();
             return Optional.empty();
         }
     }
