@@ -16,13 +16,11 @@ public class HttpTaskServer {
     }
 
     public HttpServer createServer() {
-
         try {
             HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
             createServerHandlers(httpServer);
             return httpServer;
         } catch (IOException e) {
-            System.err.println("Произошла ошибка при создании сервера: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -31,12 +29,10 @@ public class HttpTaskServer {
 
 
     private void createServerHandlers(HttpServer incomingServer) {
-
         incomingServer.createContext("/tasks", new TasksHandler(manager));
         incomingServer.createContext("/subtasks", new SubtasksHandler(manager));
         incomingServer.createContext("/epics", new EpicsHandler(manager));
         incomingServer.createContext("/history", new HistoryHandler(manager));
         incomingServer.createContext("/prioritized", new PrioritizedHandler(manager));
-
     }
 }
