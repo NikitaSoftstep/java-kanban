@@ -11,7 +11,7 @@ public class Task {
     protected String description;
     protected int taskID;
     protected TaskStatus status;
-    private TaskTypes taskType = TaskTypes.TASK;
+    protected TaskTypes taskType = TaskTypes.TASK;
 
     protected Duration duration;
 
@@ -27,16 +27,19 @@ public class Task {
         this.status = status;
     }
 
+
+
     public Task(String title,
                 String description,
                 TaskStatus status,
                 Instant startTime,
                 Duration duration) {
-        this.description = description;
         this.title = title;
+        this.description = description;
         this.status = status;
         this.startTime = startTime;
         this.duration = duration;
+        this.endTime = startTime.plus(duration);
     }
 
     public Duration getDuration() {

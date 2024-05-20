@@ -210,27 +210,42 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addSimpleTask(Task task) {
-        super.addSimpleTask(task);
+    public Task addSimpleTask(Task task) {
+        Task newTask = super.addSimpleTask(task);
         save();
+        if (newTask == null) {
+            return null;
+        }
+        return newTask;
     }
 
     @Override
-    public void addEpicTask(Epic epic) {
-        super.addEpicTask(epic);
+    public Epic addEpicTask(Epic epic) {
+        Epic newEpic = super.addEpicTask(epic);
         save();
+        if (newEpic == null) {
+            return null;
+        }
+        return newEpic;
     }
 
     @Override
-    public void addSubtask(Subtask subtask) {
-        super.addSubtask(subtask);
+    public Subtask addSubtask(Subtask subtask) {
+        Subtask newSubtask = super.addSubtask(subtask);
         save();
+        if (newSubtask == null) {
+            return null;
+        }
+        return newSubtask;
     }
 
     @Override
     public Task getSimpleTask(int taskID) {
         Task task = super.getSimpleTask(taskID);
         save();
+        if (task == null) {
+            return null;
+        }
         return task;
     }
 
@@ -238,6 +253,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public Epic getEpicTask(int taskID) {
         Epic epic = super.getEpicTask(taskID);
         save();
+        if (epic == null) {
+            return null;
+        }
         return epic;
     }
 
@@ -245,6 +263,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public Subtask getSubtask(int taskID) {
         Subtask subtask = super.getSubtask(taskID);
         save();
+        if (subtask == null) {
+            return null;
+        }
         return subtask;
     }
 
@@ -267,21 +288,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateSimpleTask(Task task) {
+    public Task updateSimpleTask(Task task) {
         super.updateSimpleTask(task);
         save();
+        return task;
     }
 
     @Override
-    public void updateEpicTask(Epic epic) {
+    public Epic updateEpicTask(Epic epic) {
         super.updateEpicTask(epic);
         save();
+        return epic;
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
+    public Subtask updateSubtask(Subtask subtask) {
         super.updateSubtask(subtask);
         save();
+        return subtask;
     }
 
     @Override

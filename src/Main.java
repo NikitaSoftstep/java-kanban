@@ -1,5 +1,7 @@
 
+import server.HttpTaskServer;
 import category.TaskStatus;
+import com.sun.net.httpserver.HttpServer;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -25,9 +27,16 @@ public class Main {
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
 
+    private static final HttpTaskServer httpServer = new HttpTaskServer(fileBackedTaskManager);
+
+
     public static void main(String[] args) throws IOException {
+        HttpServer server = httpServer.createServer();
+        server.start();
         startApp();
+        server.stop(8);
     }
+
 
     public static void startApp() throws IOException {
         while (true) {
